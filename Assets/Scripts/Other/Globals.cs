@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Globals : MonoBehaviour
 {
@@ -9,7 +9,6 @@ public class Globals : MonoBehaviour
     public GameObject Player;
     public GameObject DialogueBox;
     public GameObject DialogueText;
-
 
     private void Start()
     {

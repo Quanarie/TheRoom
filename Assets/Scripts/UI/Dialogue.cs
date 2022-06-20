@@ -16,12 +16,11 @@ public class Dialogue : MonoBehaviour
     {
         text = Globals.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
         dialogueBox = Globals.Instance.DialogueBox;
-        dialogueBox.SetActive(false);
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Jump"))
         {
             if (text.text == lines[index])
             {
