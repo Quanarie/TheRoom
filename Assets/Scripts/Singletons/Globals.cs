@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Globals : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class Globals : MonoBehaviour
     public GameObject DialogueBox;
     public GameObject DialogueText;
 
-    private void Start()
+    private void Awake()
     {
         if (Instance && Instance != this)
         {
