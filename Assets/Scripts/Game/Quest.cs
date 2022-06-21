@@ -3,56 +3,44 @@ using UnityEngine;
 public class Quest : MonoBehaviour, IQuestElement
 {
     [SerializeField] private int id;
-    [SerializeField] private int numberOfStages;
+    [SerializeField] private int nextStage;
 
     public int GetId() => id;
-    public int GetNumberOfStages() => numberOfStages;
 
-    private bool[] stages;
+    private int stage = 0;
 
     private void Start()
     {
-        stages = new bool[numberOfStages];
-
         QuestManager.Instance.InitializeQuest(this);
     }
 
-    public int GetCurrentStage()
+    public int GetCurrentStage() => stage;
+
+    public void SetCurrentStage(int value)
     {
-        int stage = 0;
-        for (int i = 0; i < stages.Length; i++)
+        stage = value;
+    }
+
+    public bool IsQuestComplete() => stage == 100; //quest completed
+
+    public bool StageBegin()
+    {
+        if (stage == 0 || stage == 1) // 0 - not started, 1 - just started(0 stages done)
         {
-            if (stages[i] == true) stage++;
+            stage = 1;
+            return true;
         }
-        return stage;
-    }
-
-    public void MarkStageComplete(int stage)
-    {
-        stages[stage] = true;
-    }
-
-    public bool IsQuestComplete()
-    {
-        bool isComplete = true;
-        for (int i = 0; i < stages.Length; i++)
+        else
         {
-            if (stages[i] == false)
-            {
-                isComplete = false;
-                break;
-            }
+            return false;
         }
-        return isComplete;
     }
 
-    public bool Begin()
+    public void StageComplete() // 0 stage completed (not the whole quest)
     {
-        return !stages[0];
-    }
-
-    public void Complete()
-    {
-        stages[0] = true;
+        if (stage == 1)
+        {
+            stage = nextStage;
+        }
     }
 }

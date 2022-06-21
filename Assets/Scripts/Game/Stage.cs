@@ -3,12 +3,13 @@
 public class Stage : MonoBehaviour, IQuestElement
 {
     [SerializeField] private int id;
-    [SerializeField] private int stageNumber;
+    [SerializeField] private int startStage;
+    [SerializeField] private int nextStage;
 
-    public bool Begin()
+    public bool StageBegin()
     {
         int currentStage = QuestManager.Instance.Quests[id].GetCurrentStage();
-        if (currentStage == stageNumber)
+        if (currentStage == startStage)
         {
             return true;
         }
@@ -18,12 +19,12 @@ public class Stage : MonoBehaviour, IQuestElement
         }
     }
 
-    public void Complete()
+    public void StageComplete()
     {
         int currentStage = QuestManager.Instance.Quests[id].GetCurrentStage();
-        if (currentStage == stageNumber)
+        if (currentStage == startStage)
         {
-            QuestManager.Instance.Quests[id].MarkStageComplete(stageNumber);
+            QuestManager.Instance.Quests[id].SetCurrentStage(nextStage);
         }
     }
 }

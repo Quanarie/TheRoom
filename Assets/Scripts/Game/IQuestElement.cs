@@ -1,5 +1,5 @@
 ﻿public interface IQuestElement
 {
-    public bool Begin();
-    public void Complete();
+    public bool StageBegin();
+    public void StageComplete();
 }

@@ -47,9 +47,9 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && Input.GetKey(KeyCode.Space) && !isPlayerInside) // isPlayerInside check so it does not call startDialogue() multiple times while inside
         {
             text.text = string.Empty;
             isPlayerInside = true;
@@ -69,8 +69,7 @@ public class Dialogue : MonoBehaviour
     private void startDialogue()
     {
         index = 0;
-
-        if (questElement.Begin())
+        if (questElement.StageBegin())
         {
             dialogueBox.SetActive(true);
             isPrintingQuestLines = true;
@@ -92,7 +91,7 @@ public class Dialogue : MonoBehaviour
             text.text = string.Empty;
             StartCoroutine(typeLine(lines));
         }
-        else
+        else 
         {
             endStage();
         }
@@ -100,7 +99,8 @@ public class Dialogue : MonoBehaviour
 
     private void endStage()
     {
-        questElement.Complete();
+        if (isPrintingQuestLines) questElement.StageComplete();
+
         endDialogue();
     }
 
