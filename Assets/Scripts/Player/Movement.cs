@@ -27,6 +27,7 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
+        input = InputManager.Instance.PlayerInput;
         if (input != Vector2.zero)
         {
             nonZeroMoveDirection.x = input.x;
@@ -42,11 +43,5 @@ public class Movement : MonoBehaviour
 
         if (moveAmount.x < 0f) sprite.flipX = true;
         else if (moveAmount.x > 0f) sprite.flipX = false;
-    }
-
-    //Input system methods
-    public void OnMovement(InputAction.CallbackContext context)
-    {
-        input = context.ReadValue<Vector2>();
     }
 }

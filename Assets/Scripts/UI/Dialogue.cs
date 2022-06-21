@@ -21,19 +21,24 @@ public class Dialogue : MonoBehaviour
     {
         text = Globals.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
         dialogueBox = Globals.Instance.DialogueBox;
+        text.text = string.Empty;
+        dialogueBox.SetActive(false);
 
         questElement = GetComponent<IQuestElement>();
     }
 
     private void Update()
     {
-        if (isPrintingQuestLines) printLines(questLines);
-        else printLines(regularLines);
+        if (isPlayerInside)
+        {
+            if (isPrintingQuestLines) printLines(questLines);
+            else printLines(regularLines);
+        }
     }
 
     private void printLines(string[] lines)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isPlayerInside)
+        if (InputManager.Instance.GetInteractionPressed())
         {
             if (text.text == lines[index])
             {
@@ -49,9 +54,8 @@ public class Dialogue : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && Input.GetKey(KeyCode.Space) && !isPlayerInside) // isPlayerInside check so it does not call startDialogue() multiple times while inside
+        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !isPlayerInside) // isPlayerInside check so it does not call startDialogue() multiple times while inside
         {
-            text.text = string.Empty;
             isPlayerInside = true;
             startDialogue();
         }
@@ -69,6 +73,7 @@ public class Dialogue : MonoBehaviour
     private void startDialogue()
     {
         index = 0;
+        text.text = string.Empty;
         if (questElement.StageBegin())
         {
             dialogueBox.SetActive(true);
