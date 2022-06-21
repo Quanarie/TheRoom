@@ -4,27 +4,40 @@ using TMPro;
 
 public class Dialogue : MonoBehaviour
 {
-    [SerializeField] private string[] lines;
+    [SerializeField] private string[] questLines;
+    [SerializeField] private string[] regularLines;
     [SerializeField] private float speed;
 
     private TextMeshProUGUI text;
     private GameObject dialogueBox;
 
     private int index;
+    private bool isPlayerInside;
+    private bool isPrintingQuestLines;
+
+    private IQuestElement questElement;
 
     private void Start()
     {
         text = Globals.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
         dialogueBox = Globals.Instance.DialogueBox;
+
+        questElement = GetComponent<IQuestElement>();
     }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (isPrintingQuestLines) printLines(questLines);
+        else printLines(regularLines);
+    }
+
+    private void printLines(string[] lines)
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isPlayerInside)
         {
             if (text.text == lines[index])
             {
-                nextLine();
+                nextLine(lines);
             }
             else
             {
@@ -39,6 +52,7 @@ public class Dialogue : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             text.text = string.Empty;
+            isPlayerInside = true;
             startDialogue();
         }
     }
@@ -47,6 +61,7 @@ public class Dialogue : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            isPlayerInside = false;
             endDialogue();
         }
     }
@@ -54,32 +69,49 @@ public class Dialogue : MonoBehaviour
     private void startDialogue()
     {
         index = 0;
-        dialogueBox.SetActive(true);
-        StartCoroutine(typeLine());
 
+        if (questElement.Begin())
+        {
+            dialogueBox.SetActive(true);
+            isPrintingQuestLines = true;
+            StartCoroutine(typeLine(questLines));
+        }
+        else
+        {
+            dialogueBox.SetActive(true);
+            isPrintingQuestLines = false;
+            StartCoroutine(typeLine(regularLines));
+        }
     }
 
-    private void nextLine()
+    private void nextLine(string[] lines)
     {
         if (index < lines.Length - 1)
         {
             index++;
             text.text = string.Empty;
-            StartCoroutine(typeLine());
+            StartCoroutine(typeLine(lines));
         }
         else
         {
-            endDialogue();
+            endStage();
         }
+    }
+
+    private void endStage()
+    {
+        questElement.Complete();
+        endDialogue();
     }
 
     private void endDialogue()
     {
         StopAllCoroutines();
+        text.text = string.Empty;
         dialogueBox.SetActive(false);
     }
 
-    private IEnumerator typeLine()
+    private IEnumerator typeLine(string[] lines)
     {
         foreach(char c in lines[index].ToCharArray())
         {

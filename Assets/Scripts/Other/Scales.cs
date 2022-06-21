@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Scales : MonoBehaviour
 {
-    public Scales Instance { get; private set; }
+    public static Scales Instance { get; private set; }
 
     public int PleasureScale { get; private set; }
     public int FearScale { get; private set; }
