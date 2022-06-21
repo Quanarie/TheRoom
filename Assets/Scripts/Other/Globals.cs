@@ -7,6 +7,7 @@ public class Globals : MonoBehaviour
     public GameObject Player;
     public GameObject DialogueBox;
     public GameObject DialogueText;
+    public GameObject[] Choices;
 
     private void Awake()
     {

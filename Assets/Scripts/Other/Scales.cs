@@ -6,13 +6,13 @@ public class Scales : MonoBehaviour
 {
     public static Scales Instance { get; private set; }
 
-    public int PleasureScale { get; private set; }
-    public int FearScale { get; private set; }
-    public int RealismScale { get; private set; }
+    public int PleasureScale;
+    public int AnxietyScale;
+    public int RealisticScale;
 
-    public void IncrementPleasure() => PleasureScale += 1;
-    public void IncrementFear() => FearScale += 1;
-    public void IncrementRealism() => RealismScale += 1;
+    public void AddPleasure(int value) => PleasureScale += value;
+    public void AddFear(int value) => AnxietyScale += value;
+    public void AddRealism(int value) => RealisticScale += value;
 
     private void Awake()
     {

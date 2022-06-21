@@ -1,19 +1,23 @@
 using System.Collections;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using Ink.Runtime;
 
 public class Dialogue : MonoBehaviour
 {
-    [SerializeField] private string[] questLines;
-    [SerializeField] private string[] regularLines;
+    [SerializeField] private TextAsset inkJSONQuest;
+    [SerializeField] private TextAsset inkJSONRegular;
     [SerializeField] private float speed;
 
     private TextMeshProUGUI text;
     private GameObject dialogueBox;
 
-    private int index;
     private bool isPlayerInside;
     private bool isPrintingQuestLines;
+
+    private Story regularStory;
+    private Story questStory;
 
     private IQuestElement questElement;
 
@@ -24,6 +28,12 @@ public class Dialogue : MonoBehaviour
         text.text = string.Empty;
         dialogueBox.SetActive(false);
 
+        print(inkJSONRegular.text);
+        regularStory = new Story(inkJSONRegular.text);
+        questStory = new Story(inkJSONQuest.text);
+
+        InitializeChoiceButtons(questStory); //choices are only during quest dialogues
+
         questElement = GetComponent<IQuestElement>();
     }
 
@@ -31,23 +41,23 @@ public class Dialogue : MonoBehaviour
     {
         if (isPlayerInside)
         {
-            if (isPrintingQuestLines) printLines(questLines);
-            else printLines(regularLines);
+            if (isPrintingQuestLines) printLines(questStory);
+            else printLines(regularStory);
         }
     }
 
-    private void printLines(string[] lines)
+    private void printLines(Story story)
     {
         if (InputManager.Instance.GetInteractionPressed())
         {
-            if (text.text == lines[index])
+            if (text.text == story.currentText)
             {
-                nextLine(lines);
+                nextLine(story);
             }
             else
             {
                 StopAllCoroutines();
-                text.text = lines[index];
+                text.text = story.currentText;
             }
         }
     }
@@ -72,33 +82,83 @@ public class Dialogue : MonoBehaviour
 
     private void startDialogue()
     {
-        index = 0;
         text.text = string.Empty;
         if (questElement.StageBegin())
         {
+            questStory.ResetState();
             dialogueBox.SetActive(true);
             isPrintingQuestLines = true;
-            StartCoroutine(typeLine(questLines));
+            nextLine(questStory);
         }
         else
         {
+            regularStory.ResetState();
             dialogueBox.SetActive(true);
             isPrintingQuestLines = false;
-            StartCoroutine(typeLine(regularLines));
+            nextLine(regularStory);
         }
     }
 
-    private void nextLine(string[] lines)
+    private void nextLine(Story story)
     {
-        if (index < lines.Length - 1)
+        if (story.canContinue)
         {
-            index++;
             text.text = string.Empty;
-            StartCoroutine(typeLine(lines));
+            StartCoroutine(typeLine(story));
+
+            if (story.currentChoices.Count != 0)
+            {
+                displayChoices(story);
+            }
+            else
+            {
+                hideChoices();
+            }
         }
         else 
         {
             endStage();
+        }
+    }
+
+    private void displayChoices(Story story)
+    {
+        int index = 0;
+        foreach (Choice choice in story.currentChoices)
+        {
+            Globals.Instance.Choices[index].SetActive(true);
+            Globals.Instance.Choices[index].GetComponentInChildren<TextMeshProUGUI>().text = choice.text;
+            index++;
+        }
+    }
+
+    private void InitializeChoiceButtons(Story story)
+    {
+        Globals.Instance.Choices[0].GetComponent<Button>().onClick.AddListener(() => MakeChoice(story, 0));
+        Globals.Instance.Choices[1].GetComponent<Button>().onClick.AddListener(() => MakeChoice(story, 1));
+        Globals.Instance.Choices[2].GetComponent<Button>().onClick.AddListener(() => MakeChoice(story, 2));
+    }
+
+    public void MakeChoice(Story story, int index)
+    {
+        if (index >= 0 && index < story.currentChoices.Count)
+        {
+            story.ChooseChoiceIndex(index);
+            nextLine(story);
+
+            if (index == 0) Scales.Instance.AddPleasure(1);
+            else if (index == 1) Scales.Instance.AddFear(1);
+            else if (index == 2) Scales.Instance.AddRealism(1);
+        }
+
+    }
+
+    private void hideChoices()
+    {
+        for (int i = 0; i < Globals.Instance.Choices.Length; i++)
+        {
+            GameObject choice = Globals.Instance.Choices[i];
+            choice.SetActive(false);
         }
     }
 
@@ -116,9 +176,9 @@ public class Dialogue : MonoBehaviour
         dialogueBox.SetActive(false);
     }
 
-    private IEnumerator typeLine(string[] lines)
+    private IEnumerator typeLine(Story story)
     {
-        foreach(char c in lines[index].ToCharArray())
+        foreach (char c in story.Continue().ToCharArray())
         {
             text.text += c;
             yield return new WaitForSeconds(speed);

@@ -16,23 +16,20 @@ public class Quest : MonoBehaviour, IQuestElement
 
     public int GetCurrentStage() => stage;
 
-    public void SetCurrentStage(int value)
-    {
-        stage = value;
-    }
+    public void SetCurrentStage(int value) => stage = value;
 
-    public bool IsQuestComplete() => stage == 100; //quest completed
+    public bool IsQuestComplete() => stage == 100;
 
     public bool StageBegin()
     {
-        if (stage == 0 || stage == 1) // 0 - not started, 1 - just started(0 stages done)
+        if (stage == 0 || stage == 1) // 0 - not started, 1 - just started (0 stages done)
         {
             stage = 1;
-            return true;
+            return true; // play quest dialogue
         }
         else
         {
-            return false;
+            return false; // play regular dialogue
         }
     }
 
