@@ -7,7 +7,7 @@ public class Quest : MonoBehaviour, IQuestElement
 
     public int GetId() => id;
 
-    private int stage = 0;
+    public int stage = 0;
 
     private void Start()
     {

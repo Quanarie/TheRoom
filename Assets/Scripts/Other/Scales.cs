@@ -11,8 +11,8 @@ public class Scales : MonoBehaviour
     public int RealisticScale;
 
     public void AddPleasure(int value) => PleasureScale += value;
-    public void AddFear(int value) => AnxietyScale += value;
-    public void AddRealism(int value) => RealisticScale += value;
+    public void AddAnxiety(int value) => AnxietyScale += value;
+    public void AddRealistic(int value) => RealisticScale += value;
 
     private void Awake()
     {

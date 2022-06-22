@@ -19,6 +19,11 @@ public class Dialogue : MonoBehaviour
 
     private const int ampersand = 38;
     private const int asterisk = 42;
+    private const int slash = 47;
+    private const int circumflex = 94;
+    private const string pleasure = "Pleasure";
+    private const string anxiety = "Anxiety";
+    private const string realistic = "Realistic";
 
     private void Start()
     {
@@ -43,14 +48,30 @@ public class Dialogue : MonoBehaviour
             if (canReadNext())
             {
                 firstCharNextLine = readNextLine().ToCharArray()[0];
-                if (firstCharNextLine == asterisk)
+                if (firstCharNextLine == asterisk) // choice
                 {
                     displayChoices();
                     isFirstCharNextLineIsSpecial = true;
                 }
-                else if (firstCharNextLine == ampersand)
+                else if (firstCharNextLine == ampersand) // one of the choices
                 {
                     isFirstCharNextLineIsSpecial = true;
+                }
+                else if (firstCharNextLine == slash) // scale change
+                {
+                    isFirstCharNextLineIsSpecial = true;
+                    string[] line = readNextLine().Split(";");
+                    line[0] = line[0].Replace("/", ""); // hardcode
+                    changeScale(line[0], int.Parse(line[1]));
+                    index++;
+                }
+                else if (firstCharNextLine == circumflex) // stage change
+                {
+                    isFirstCharNextLineIsSpecial = true;
+                    string[] line = readNextLine().Split(";");
+                    line[0] = line[0].Replace("^", ""); // hardcode
+                    changeStage(int.Parse(line[0]), int.Parse(line[1]));
+                    index++;
                 }
             }
 
@@ -66,6 +87,28 @@ public class Dialogue : MonoBehaviour
                     endDialogue();
                 }
             }
+        }
+    }
+
+    private void changeStage(int questId, int result)
+    {
+        QuestManager.Instance.Quests[questId].SetCurrentStage(result);
+    }
+
+    private void changeScale(string name, int delta)
+    {
+        print("called scale");
+        if (name == pleasure)
+        {
+            Scales.Instance.AddPleasure(delta);
+        }
+        else if (name == anxiety)
+        {
+            Scales.Instance.AddAnxiety(delta);
+        }
+        else if (name == realistic)
+        {
+            Scales.Instance.AddRealistic(delta);
         }
     }
 
