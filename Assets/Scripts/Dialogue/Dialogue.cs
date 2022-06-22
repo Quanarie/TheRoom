@@ -14,10 +14,13 @@ public class Dialogue : MonoBehaviour
 
     private TextMeshProUGUI dialogueText;
 
+    private string currentTypingText;
+
     private const int ampersand = 38;
     private const int asterisk = 42;
     private const int slash = 47;
     private const int circumflex = 94;
+    private const int percent = 37;
     private const string pleasure = "Pleasure";
     private const string anxiety = "Anxiety";
     private const string realistic = "Realistic";
@@ -25,10 +28,6 @@ public class Dialogue : MonoBehaviour
     private void Start()
     {
         text = story.text.Split("\n");
-        for (int i = 0; i < text.Length; i++)
-        {
-            print(text[i]);
-        }
         index = 0;
         isPlayerInRange = false;
         dialogueText = DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
@@ -39,71 +38,69 @@ public class Dialogue : MonoBehaviour
         if (isPlayerInRange)
         {
             bool isFirstCharNextLineIsSpecial = false;
-            char firstCharNextLine;
             if (canReadNext())
             {
-                firstCharNextLine = readNextLine().ToCharArray()[0];
-                if (firstCharNextLine == asterisk) // choice
-                {
-                    displayChoices();
-                    isFirstCharNextLineIsSpecial = true;
-                }
-                else if (firstCharNextLine == ampersand) // one of the choices
-                {
-                    isFirstCharNextLineIsSpecial = true;
-                }
-                else if (firstCharNextLine == slash) // scale change
-                {
-                    isFirstCharNextLineIsSpecial = true;
-                    string[] line = readNextLine().Split(";");
-                    line[0] = line[0].Replace("/", ""); // hardcode
-                    changeScale(line[0], int.Parse(line[1]));
-                    index++;
-                }
-                else if (firstCharNextLine == circumflex) // stage change
-                {
-                    isFirstCharNextLineIsSpecial = true;
-                    string[] line = readNextLine().Split(";");
-                    line[0] = line[0].Replace("^", ""); // hardcode
-                    changeStage(int.Parse(line[0]), int.Parse(line[1]));
-                    index++;
-                }
+                analyzeFirstCharNextLine(ref isFirstCharNextLineIsSpecial);
             }
 
-            if (InputManager.Instance.GetInteractionPressed() && !isFirstCharNextLineIsSpecial)
+            if (isFirstCharNextLineIsSpecial == false)
+            {
+                input();
+            }
+        }
+    }
+
+    private void input()
+    {
+        if (InputManager.Instance.GetInteractionPressed())
+        {
+            if (dialogueText.text == currentTypingText)
             {
                 index++;
                 if (canRead())
                 {
-                    currentLine();
+                    printCurrentLine();
                 }
                 else
                 {
                     endDialogue();
                 }
             }
+            else
+            {
+                StopAllCoroutines();
+                dialogueText.text = currentTypingText;
+            }
         }
     }
 
-    private void changeStage(int questId, int result)
+    private void analyzeFirstCharNextLine(ref bool isFirstCharNextLineIsSpecial)
     {
-        QuestManager.Instance.Quests[questId].SetCurrentStage(result);
-    }
-
-    private void changeScale(string name, int delta)
-    {
-        print("called scale");
-        if (name == pleasure)
+        char firstCharNextLine = readNextLine().ToCharArray()[0];
+        if (firstCharNextLine == asterisk) // choice
         {
-            Scales.Instance.AddPleasure(delta);
+            displayChoices();
+            isFirstCharNextLineIsSpecial = true;
         }
-        else if (name == anxiety)
+        else if (firstCharNextLine == ampersand) // one of the choices
         {
-            Scales.Instance.AddAnxiety(delta);
+            isFirstCharNextLineIsSpecial = true;
         }
-        else if (name == realistic)
+        else if (firstCharNextLine == slash) // scale change
         {
-            Scales.Instance.AddRealistic(delta);
+            isFirstCharNextLineIsSpecial = true;
+            string[] line = readNextLine().Split(";");
+            line[0] = line[0].Replace("/", ""); // hardcode
+            changeScale(line[0], int.Parse(line[1]));
+            index++;
+        }
+        else if (firstCharNextLine == circumflex) // stage change
+        {
+            isFirstCharNextLineIsSpecial = true;
+            string[] line = readNextLine().Split(";");
+            line[0] = line[0].Replace("^", ""); // hardcode
+            changeStage(int.Parse(line[0]), int.Parse(line[1]));
+            index++;
         }
     }
 
@@ -126,36 +123,48 @@ public class Dialogue : MonoBehaviour
 
     private void reactChoice(string choice)
     {
-        while (canReadNext() && readNextLine().ToCharArray()[0] == ampersand)
+        DialogueManager.Instance.HideChoices();
+        while (readLine().Replace("&", "") != choice)
         {
-            if (readNextLine().Split(":")[0].Replace("&", "") == choice)
-            {
-                index++; // go to current choice line
-                currentLine(":", 1);
-                DialogueManager.Instance.HideChoices();
-                while (readNextLine().ToCharArray()[0] == ampersand) // point to the place after the choice
-                {
-                    index++;
-                }
-            }
-            else
+            index++;
+        }
+        index++;
+        printCurrentLine();
+    }
+
+    private void printCurrentLine()
+    {
+        StopAllCoroutines();
+        dialogueText.text = string.Empty;
+        if (readLine().ToCharArray()[readLine().Length - 1] == ampersand)
+        {
+            string line = readLine().Remove(readLine().Length - 1);
+            StartCoroutine(typeCurrentLine(line));
+
+            while (readLine().ToCharArray()[readLine().Length - 1] != percent)
             {
                 index++;
             }
         }
+        else if (readLine().ToCharArray()[readLine().Length - 1] == percent)
+        {
+            string line = readLine().Remove(readLine().Length - 1);
+            StartCoroutine(typeCurrentLine(line));
+        }
+        else
+        {
+            StartCoroutine(typeCurrentLine(readLine()));
+        }
     }
 
-    private void currentLine()
+    private IEnumerator typeCurrentLine(string line)
     {
-        dialogueText.text = string.Empty;
-        StartCoroutine(typeCurrentLine(readLine()));
-    }
-
-    private void currentLine(string splitOn, int index)
-    {
-        dialogueText.text = string.Empty;
-        string line = readLine().Split(splitOn)[index];
-        StartCoroutine(typeCurrentLine(line));
+        currentTypingText = line;
+        foreach (char c in line)
+        {
+            dialogueText.text += c;
+            yield return new WaitForSeconds(DialogueManager.Instance.waitTimeBetweenLetters);
+        }
     }
 
     private string readLine()   //call after canRead() check only
@@ -168,15 +177,6 @@ public class Dialogue : MonoBehaviour
         return text[index + 1];
     }
 
-    private IEnumerator typeCurrentLine(string line)
-    {
-        foreach (char c in line)
-        {
-            dialogueText.text += c;
-            yield return new WaitForSeconds(DialogueManager.Instance.waitTimeBetweenLetters);
-        }
-    }
-
     private bool canRead()
     {
         return index < text.Length;
@@ -187,9 +187,9 @@ public class Dialogue : MonoBehaviour
         return index + 1 < text.Length;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !isPlayerInRange)
         {
             startDialogue();
         }
@@ -207,7 +207,7 @@ public class Dialogue : MonoBehaviour
     {
         DialogueManager.Instance.ShowBox();
         isPlayerInRange = true;
-        currentLine();
+        printCurrentLine();
     }
 
     private void endDialogue()
@@ -215,5 +215,27 @@ public class Dialogue : MonoBehaviour
         DialogueManager.Instance.HideBox();
         isPlayerInRange = false;
         index = 0;
+    }
+
+    private void changeStage(int questId, int result)
+    {
+        QuestManager.Instance.Quests[questId].SetCurrentStage(result);
+    }
+
+    private void changeScale(string name, int delta)
+    {
+        print("called scale");
+        if (name == pleasure)
+        {
+            Scales.Instance.AddPleasure(delta);
+        }
+        else if (name == anxiety)
+        {
+            Scales.Instance.AddAnxiety(delta);
+        }
+        else if (name == realistic)
+        {
+            Scales.Instance.AddRealistic(delta);
+        }
     }
 }

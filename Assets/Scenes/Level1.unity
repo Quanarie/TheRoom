@@ -2995,7 +2995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352507c129b78469b9b20f10440c3fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitTimeBetweenLetters: 0
+  waitTimeBetweenLetters: 0.02
   DialogueBox: {fileID: 1596643682}
   DialogueText: {fileID: 120118078}
   ChoicePrefab: {fileID: 2102334169287089898, guid: 3ff1a10d9e219428e8c2fdd0a409e831, type: 3}
