@@ -4,7 +4,9 @@ public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance { get; private set; }
 
-    public Quest[] Quests = new Quest[200];
+    public Quest[] Quests;
+
+    private const int questsQuantity = 50;
 
     private void Awake()
     {
@@ -18,8 +20,12 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void InitializeQuest(Quest quest)
+    private void Start()
     {
-        Quests[quest.GetId()] = quest;
+        Quests = new Quest[questsQuantity];
+        for (int i = 0; i < questsQuantity; i++)
+        {
+            Quests[i] = new Quest(i);
+        }
     }
 }

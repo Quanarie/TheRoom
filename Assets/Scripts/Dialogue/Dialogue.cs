@@ -20,7 +20,6 @@ public class Dialogue : MonoBehaviour
     private const int asterisk = 42;
     private const int slash = 47;
     private const int circumflex = 94;
-    private const int percent = 37;
     private const string pleasure = "Pleasure";
     private const string anxiety = "Anxiety";
     private const string realistic = "Realistic";
@@ -141,14 +140,14 @@ public class Dialogue : MonoBehaviour
             string line = readLine().Remove(readLine().Length - 1);
             StartCoroutine(typeCurrentLine(line));
 
-            while (readLine().ToCharArray()[readLine().Length - 1] != percent)
+            while (readLine().ToCharArray()[readLine().Length - 1] != asterisk)
             {
                 index++;
             }
         }
-        else if (readLine().ToCharArray()[readLine().Length - 1] == percent)
+        else if (readLine().ToCharArray()[readLine().Length - 1] == asterisk)
         {
-            string line = readLine().Remove(readLine().Length - 1);
+            string line = readLine().Remove(readLine().Length - 2);
             StartCoroutine(typeCurrentLine(line));
         }
         else
@@ -191,7 +190,10 @@ public class Dialogue : MonoBehaviour
     {
         if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !isPlayerInRange)
         {
-            startDialogue();
+            if (GetComponent<QuestIdentifier>().canHaveDialogue())
+            {
+                startDialogue();
+            }
         }
     }
 
@@ -224,7 +226,6 @@ public class Dialogue : MonoBehaviour
 
     private void changeScale(string name, int delta)
     {
-        print("called scale");
         if (name == pleasure)
         {
             Scales.Instance.AddPleasure(delta);
