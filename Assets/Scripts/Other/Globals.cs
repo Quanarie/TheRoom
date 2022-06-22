@@ -5,9 +5,6 @@ public class Globals : MonoBehaviour
     public static Globals Instance { get; private set; }
 
     public GameObject Player;
-    public GameObject DialogueBox;
-    public GameObject DialogueText;
-    public GameObject[] Choices;
 
     private void Awake()
     {

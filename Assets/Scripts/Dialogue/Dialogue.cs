@@ -1,12 +1,197 @@
 using System.Collections;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
-using Ink.Runtime;
 
 public class Dialogue : MonoBehaviour
 {
-    [SerializeField] private TextAsset inkJSONQuest;
+    [SerializeField] private TextAsset story;
+    [SerializeField] private float speed;
+
+    private string[] text;
+    private int index;
+
+    private Button[] choices;
+
+    private bool isPlayerInRange;
+
+    private TextMeshProUGUI dialogueText;
+
+    private const int ampersand = 38;
+    private const int asterisk = 42;
+
+    private void Start()
+    {
+        text = story.text.Split("\n");
+        index = 0;
+        isPlayerInRange = false;
+        dialogueText = DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
+
+        choices = new Button[DialogueManager.Instance.Choices.Length];
+        for (int i = 0; i < choices.Length; i++)
+        {
+            choices[i] = DialogueManager.Instance.Choices[i].GetComponent<Button>();
+        }
+    }
+
+    private void Update()
+    {
+        if (isPlayerInRange)
+        {
+            bool isFirstCharNextLineIsSpecial = false;
+            char firstCharNextLine;
+            if (canReadNext())
+            {
+                firstCharNextLine = readNextLine().ToCharArray()[0];
+                if (firstCharNextLine == asterisk)
+                {
+                    displayChoices();
+                    isFirstCharNextLineIsSpecial = true;
+                }
+                else if (firstCharNextLine == ampersand)
+                {
+                    isFirstCharNextLineIsSpecial = true;
+                }
+            }
+
+            if (InputManager.Instance.GetInteractionPressed() && !isFirstCharNextLineIsSpecial)
+            {
+                index++;
+                if (canRead())
+                {
+                    currentLine();
+                }
+                else
+                {
+                    endDialogue();
+                }
+            }
+        }
+    }
+
+    private void displayChoices()
+    {
+        string[] line = readNextLine().Split(";");
+        line[0] = line[0].Replace("*", "");
+
+        for (int i = 0; i < choices.Length; i++)
+        {
+            choices[i].gameObject.SetActive(true);
+            choices[i].GetComponentInChildren<TextMeshProUGUI>().text = line[i];
+            int capturedi = i;
+            choices[i].onClick.AddListener(() => reactChoice(line[capturedi]));
+        }
+
+        index++; // go to * line so displayChoices() is not called multiple times from update
+    }
+
+    private void hideChoices()
+    {
+        foreach(Button choice in choices)
+        {
+            choice.gameObject.SetActive(false);
+            choice.onClick.RemoveAllListeners();
+        }
+    }
+
+    private void reactChoice(string choice)
+    {
+        while (canReadNext() && readNextLine().ToCharArray()[0] == ampersand)
+        {
+            if (readNextLine().Split(":")[0].Replace("&", "") == choice)
+            {
+                index++; // go to current choice line
+                currentLine(":", 1);
+                hideChoices();
+                while (readNextLine().ToCharArray()[0] == ampersand) // point to the place after the choice
+                {
+                    index++;
+                }
+            }
+            else
+            {
+                index++;
+            }
+        }
+    }
+
+    private void currentLine()
+    {
+        dialogueText.text = string.Empty;
+        StartCoroutine(typeCurrentLine(readLine()));
+    }
+
+    private void currentLine(string splitOn, int index)
+    {
+        dialogueText.text = string.Empty;
+        string line = readLine().Split(splitOn)[index];
+        StartCoroutine(typeCurrentLine(line));
+    }
+
+    private string readLine()   //call after canRead() check only
+    {
+        return text[index];
+    }
+
+    private string readNextLine()   //call after canReadNext() check only
+    {
+        return text[index + 1];
+    }
+
+    private IEnumerator typeCurrentLine(string line)
+    {
+        foreach (char c in line)
+        {
+            dialogueText.text += c;
+            yield return new WaitForSeconds(speed);
+        }
+    }
+
+    private bool canRead()
+    {
+        return index < text.Length;
+    }
+
+    private bool canReadNext()
+    {
+        return index + 1 < text.Length;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            startDialogue();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            endDialogue();
+        }
+    }
+
+    private void startDialogue()
+    {
+        DialogueManager.Instance.ShowBox();
+        isPlayerInRange = true;
+        currentLine();
+    }
+
+    private void endDialogue()
+    {
+        DialogueManager.Instance.HideBox();
+        isPlayerInRange = false;
+        index = 0;
+    }
+
+
+
+
+
+    /*[SerializeField] private TextAsset inkJSONQuest;
     [SerializeField] private TextAsset inkJSONRegular;
     [SerializeField] private float speed;
 
@@ -183,5 +368,5 @@ public class Dialogue : MonoBehaviour
             text.text += c;
             yield return new WaitForSeconds(speed);
         }
-    }
+    }*/
 }
