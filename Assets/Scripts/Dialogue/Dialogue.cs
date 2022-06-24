@@ -86,7 +86,7 @@ public class Dialogue : MonoBehaviour
     {
         if (DialogueManager.Instance.IsChoiceActive()) return;
 
-        if (!isCurrentLineEmpty(index) && isDialogueOn && endsOfChoice.Count == 0)
+        if (!isLineEmpty(index) && isDialogueOn && endsOfChoice.Count == 0)
         {
             if (InputManager.Instance.GetInteractionPressed() || mustMoveForward)
             {
@@ -113,7 +113,7 @@ public class Dialogue : MonoBehaviour
             }
         }
 
-        if (isCurrentLineEmpty(index) && isDialogueOn)
+        if (isLineEmpty(index) && isDialogueOn)
         {
             if (InputManager.Instance.GetInteractionPressed() || mustMoveForward)
             {
@@ -123,7 +123,7 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    private bool isCurrentLineEmpty(int ind)
+    private bool isLineEmpty(int ind)
     {
         return currentLine(ind) == "";
     }
@@ -140,6 +140,8 @@ public class Dialogue : MonoBehaviour
             parameters[1] = parameters[1].Replace("+", "").Replace("&", "").Replace("*", "");
             changeScale(parameters[0], int.Parse(parameters[1]));
             mustMoveForward = true;
+
+            if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
         }
         else if (firstChar(index) == '^')
         {
@@ -147,8 +149,22 @@ public class Dialogue : MonoBehaviour
             parameters[1] = parameters[1].Replace("&", "").Replace("*", "");
             changeStage(int.Parse(parameters[0]), int.Parse(parameters[1]));
             mustMoveForward = true;
+
+            if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
+        }
+        else if (firstChar(index) == '@')
+        {
+            Diary.Instance.AddAchievement(text[index].Replace("@", ""));
+            index++;
+
+            if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
         }
         else outTextLine(index);
+    } 
+
+    private bool isSpecial(char c)
+    {
+        return c == '*' || c == '/' || c == '^' || c == '@';
     }
 
     private void displayChoices()
@@ -328,7 +344,7 @@ public class Dialogue : MonoBehaviour
 
     private int findTheEndDialogue(int ind)
     {
-        while (!isCurrentLineEmpty(ind))
+        while (!isLineEmpty(ind))
         {
             ind++;
         }

@@ -11,12 +11,4 @@ public class DialogueTriggerOnInteract : DialogueTrigger
             dialogue.startDialogue();
         }
     }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            dialogue.endDialogue();
-        }
-    }
 }

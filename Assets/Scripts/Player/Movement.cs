@@ -28,6 +28,7 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         if (DialogueManager.Instance.IsDialogueOn()) return;
+        if (Diary.Instance.IsDiaryOnScreen()) return;
 
         input = InputManager.Instance.PlayerInput;
         if (input != Vector2.zero)
@@ -39,7 +40,7 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (DialogueManager.Instance.IsDialogueOn())
+        if (DialogueManager.Instance.IsDialogueOn() || Diary.Instance.IsDiaryOnScreen())
         {
             velocity = Vector2.zero;
             return;

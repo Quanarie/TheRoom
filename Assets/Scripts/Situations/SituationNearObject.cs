@@ -10,7 +10,7 @@ public class SituationNearObject : DialogueTrigger
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && !dialogue.isDialogueOn)
+        if (collision.CompareTag("Player") && !DialogueManager.Instance.IsDialogueOn())
         {
             dialogue.startDialogue();
         }

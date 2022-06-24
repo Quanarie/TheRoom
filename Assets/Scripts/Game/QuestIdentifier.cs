@@ -16,4 +16,16 @@ public class QuestIdentifier : MonoBehaviour
         }
         return "standard;normal";
     }
+
+    public bool isCompletedAll()
+    {
+        for (int i = 0; i < id.Length; i++)
+        {
+            if (QuestManager.Instance.Quests[id[i]].GetCurrentStage() <= stage[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

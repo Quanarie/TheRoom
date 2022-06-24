@@ -13,7 +13,7 @@ public class Bed : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed())
+        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
         {
             show();
         }
