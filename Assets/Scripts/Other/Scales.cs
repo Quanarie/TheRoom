@@ -6,9 +6,9 @@ public class Scales : MonoBehaviour
 {
     public static Scales Instance { get; private set; }
 
-    public int PleasureScale;
-    public int AnxietyScale;
-    public int RealisticScale;
+    private int PleasureScale;
+    private int AnxietyScale;
+    private int RealisticScale;
 
     public void AddPleasure(int value) => PleasureScale += value;
     public void AddAnxiety(int value) => AnxietyScale += value;

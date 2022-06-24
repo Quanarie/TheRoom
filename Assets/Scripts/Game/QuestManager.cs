@@ -18,10 +18,7 @@ public class QuestManager : MonoBehaviour
         {
             Instance = this;
         }
-    }
 
-    private void Start()
-    {
         Quests = new Quest[questsQuantity];
         for (int i = 0; i < questsQuantity; i++)
         {

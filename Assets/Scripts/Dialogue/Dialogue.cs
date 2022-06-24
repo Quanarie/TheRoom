@@ -1,111 +1,159 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
+using System.Linq;
 
 public class Dialogue : MonoBehaviour
 {
-    [SerializeField] private TextAsset story;
+    public delegate void EndOfDialogue();
+    public event EndOfDialogue OnEndOfDialogue;
 
-    private string[] text;
+    public TextAsset story;
+
+    private List<string> text;
     private int index;
 
-    private bool isPlayerInRange;
+    public bool isDialogueOn = false;
+    private bool mustMoveForward = false;
 
     private TextMeshProUGUI dialogueText;
-
     private string currentTypingText;
 
-    private const int ampersand = 38;
-    private const int asterisk = 42;
-    private const int slash = 47;
-    private const int circumflex = 94;
+    private Stack<int> endsOfChoice = new();
+    private Stack<int> endsOfOption = new();
+
     private const string pleasure = "Pleasure";
     private const string anxiety = "Anxiety";
     private const string realistic = "Realistic";
 
-    private void Start()
+    public void Start()
     {
-        text = story.text.Split("\n");
-        index = 0;
-        isPlayerInRange = false;
         dialogueText = DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
+        text = story.text.Split("\n").ToList();
+        formatText();
+    }
+
+    private void formatText()
+    {
+        for (int k = 0; k < text.Count; k++)
+        {
+            if (text[k].Contains('&') || text[k].Contains('*') || text[k].Contains('%') || text[k].Contains('/') || text[k].Contains('^'))
+                continue;
+            if (text[k] == "")
+                continue;
+
+            char[] chars = text[k].ToCharArray();
+            text.Remove(text[k]);
+
+            int j = 0;
+            int lines = 0;
+            string newLine = "";
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] == '#' || i == chars.Length - 1)
+                {
+                    int tempLines = Mathf.CeilToInt((float)(i - j - 1) / DialogueManager.Instance.maximumSymbolsInRow);
+                    if (lines + tempLines <= DialogueManager.Instance.maximumRows)
+                    {
+                        lines += tempLines;
+                        for (; j < i; j++)
+                        {
+                            newLine += chars[j];
+                        }
+                    }
+                    else
+                    {
+                        lines = tempLines;
+                        text.Insert(k, newLine);
+                        newLine = "";
+                        j++;
+                        for (; j < i; j++)
+                        {
+                            newLine += chars[j];
+                        }
+                        k++;
+                    }
+                }
+            }
+            text.Insert(k, newLine);
+            k++;
+        }
     }
 
     private void Update()
     {
-        if (isPlayerInRange)
-        {
-            bool isFirstCharNextLineIsSpecial = false;
-            if (canReadNext())
-            {
-                analyzeFirstCharNextLine(ref isFirstCharNextLineIsSpecial);
-            }
+        if (DialogueManager.Instance.IsChoiceActive()) return;
 
-            if (isFirstCharNextLineIsSpecial == false)
+        if (!isCurrentLineEmpty(index) && isDialogueOn && endsOfChoice.Count == 0)
+        {
+            if (InputManager.Instance.GetInteractionPressed() || mustMoveForward)
             {
-                input();
+                mustMoveForward = false;
+                readLine();
             }
         }
-    }
 
-    private void input()
-    {
-        if (InputManager.Instance.GetInteractionPressed())
+        if (endsOfOption.Count != 0)
         {
-            if (dialogueText.text == currentTypingText)
+            if (index <= endsOfOption.Peek())
             {
-                index++;
-                if (canRead())
+                if (InputManager.Instance.GetInteractionPressed() || mustMoveForward)
                 {
-                    printCurrentLine();
-                }
-                else
-                {
-                    endDialogue();
+                    mustMoveForward = false;
+                    readLine();
                 }
             }
             else
             {
-                StopAllCoroutines();
-                dialogueText.text = currentTypingText;
+                index = endsOfChoice.Pop();
+                index++;
+                endsOfOption.Pop();
+            }
+        }
+
+        if (isCurrentLineEmpty(index) && isDialogueOn)
+        {
+            if (InputManager.Instance.GetInteractionPressed() || mustMoveForward)
+            {
+                mustMoveForward = false;
+                endDialogue();
             }
         }
     }
 
-    private void analyzeFirstCharNextLine(ref bool isFirstCharNextLineIsSpecial)
+    private bool isCurrentLineEmpty(int ind)
     {
-        char firstCharNextLine = readNextLine().ToCharArray()[0];
-        if (firstCharNextLine == asterisk) // choice
+        return currentLine(ind) == "";
+    }
+
+    private void readLine()
+    {
+        if (firstChar(index) == '*')
         {
             displayChoices();
-            isFirstCharNextLineIsSpecial = true;
         }
-        else if (firstCharNextLine == ampersand) // one of the choices
+        else if (firstChar(index) == '/')
         {
-            isFirstCharNextLineIsSpecial = true;
+            string[] parameters = currentLine(index).Replace("/", "").Split(";");
+            parameters[1] = parameters[1].Replace("+", "").Replace("&", "").Replace("*", "");
+            changeScale(parameters[0], int.Parse(parameters[1]));
+            mustMoveForward = true;
         }
-        else if (firstCharNextLine == slash) // scale change
+        else if (firstChar(index) == '^')
         {
-            isFirstCharNextLineIsSpecial = true;
-            string[] line = readNextLine().Split(";");
-            line[0] = line[0].Replace("/", ""); // hardcode
-            changeScale(line[0], int.Parse(line[1]));
-            index++;
+            string[] parameters = currentLine(index).Replace("^", "").Split(";");
+            parameters[1] = parameters[1].Replace("&", "").Replace("*", "");
+            changeStage(int.Parse(parameters[0]), int.Parse(parameters[1]));
+            mustMoveForward = true;
         }
-        else if (firstCharNextLine == circumflex) // stage change
-        {
-            isFirstCharNextLineIsSpecial = true;
-            string[] line = readNextLine().Split(";");
-            line[0] = line[0].Replace("^", ""); // hardcode
-            changeStage(int.Parse(line[0]), int.Parse(line[1]));
-            index++;
-        }
+        else outTextLine(index);
     }
 
     private void displayChoices()
     {
-        string[] line = readNextLine().Split(";");
+        string[] line = currentLine(index).Split(";");
         line[0] = line[0].Replace("*", "");
         Button[] choices = DialogueManager.Instance.ShowChoices(line.Length);
 
@@ -114,114 +162,101 @@ public class Dialogue : MonoBehaviour
             choices[i].gameObject.SetActive(true);
             choices[i].GetComponentInChildren<TextMeshProUGUI>().text = line[i];
             int capturedi = i;
-            choices[i].onClick.AddListener(() => reactChoice(line[capturedi]));
+            choices[i].onClick.AddListener(() => startChoices(line[capturedi]));
         }
 
-        index++; // go to * line so displayChoices() is not called multiple times from update
+        index++; // from * to first &
+        endsOfChoice.Push(findTheEndChoice(index));
     }
 
-    private void reactChoice(string choice)
+    private void startChoices(string choice)
     {
         DialogueManager.Instance.HideChoices();
-        while (readLine().Replace("&", "") != choice)
-        {
-            index++;
-        }
-        index++;
-        printCurrentLine();
+        reactToChoice(choice);
+        readLine();
     }
 
-    private void printCurrentLine()
+    private void reactToChoice(string choice)
     {
-        StopAllCoroutines();
-        dialogueText.text = string.Empty;
-        if (readLine().ToCharArray()[readLine().Length - 1] == ampersand)
+        if (currentLine(index).Replace("&", "") == choice)
         {
-            string line = readLine().Remove(readLine().Length - 1);
-            StartCoroutine(typeCurrentLine(line));
-
-            while (readLine().ToCharArray()[readLine().Length - 1] != asterisk)
-            {
-                index++;
-            }
-        }
-        else if (readLine().ToCharArray()[readLine().Length - 1] == asterisk)
-        {
-            string line = readLine().Remove(readLine().Length - 2);
-            StartCoroutine(typeCurrentLine(line));
+            readChoice();
         }
         else
         {
-            StartCoroutine(typeCurrentLine(readLine()));
+            index = findTheEndOption(index);
+            index++; // after option
+            reactToChoice(choice);
         }
     }
 
-    private IEnumerator typeCurrentLine(string line)
+    private void readChoice()
     {
-        currentTypingText = line;
-        foreach (char c in line)
+        int endOfOption = findTheEndOption(index);
+        endsOfOption.Push(endOfOption);
+        index++;
+    }
+
+    private int findTheEndChoice(int ind)
+    {
+        int i = 0;
+        while (i < 1)
         {
-            dialogueText.text += c;
-            yield return new WaitForSeconds(DialogueManager.Instance.waitTimeBetweenLetters);
-        }
-    }
-
-    private string readLine()   //call after canRead() check only
-    {
-        return text[index];
-    }
-
-    private string readNextLine()   //call after canReadNext() check only
-    {
-        return text[index + 1];
-    }
-
-    private bool canRead()
-    {
-        return index < text.Length;
-    }
-
-    private bool canReadNext()
-    {
-        return index + 1 < text.Length;
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !isPlayerInRange)
-        {
-            if (GetComponent<QuestIdentifier>().canHaveDialogue())
+            ind++;
+            if (firstChar(ind) == '*') i--;
+            else if (lastChar(ind) == '*' || lastChar(ind) == '&')
             {
-                startDialogue();
+                for (int j = currentLine(ind).Length - 1; j > 0; j--)
+                {
+                    if (currentLine(ind).ToCharArray()[j] == '*')
+                    {
+                        i++;
+                    }
+                    else if (currentLine(ind).ToCharArray()[j] != '&')
+                    {
+                        break;
+                    }
+                }
             }
         }
+        return ind;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private int findTheEndOption(int ind)
     {
-        if (collision.CompareTag("Player"))
+        int i = 0;
+        while (i < 1)
         {
-            endDialogue();
+            ind++;
+            if (firstChar(ind) == '&') i--;
+            else if (lastChar(ind) == '*' || lastChar(ind) == '&')
+            {
+                for (int j = currentLine(ind).Length - 1; j > 0; j--)
+                {
+                    if (currentLine(ind).ToCharArray()[j] == '&')
+                    {
+                        i++;
+                    }
+                    else if (currentLine(ind).ToCharArray()[j] != '*')
+                    {
+                        break;
+                    }
+                }
+            }
         }
+        return ind;
     }
 
-    private void startDialogue()
+    private string currentLine(int ind)
     {
-        DialogueManager.Instance.ShowBox();
-        isPlayerInRange = true;
-        printCurrentLine();
-    }
-
-    private void endDialogue()
-    {
-        DialogueManager.Instance.HideBox();
-        isPlayerInRange = false;
-        index = 0;
+        return text[ind].TrimStart('\t').TrimEnd();
     }
 
     private void changeStage(int questId, int result)
     {
+        Debug.Log("id" + questId + " stage " + result);
         QuestManager.Instance.Quests[questId].SetCurrentStage(result);
+        index++;
     }
 
     private void changeScale(string name, int delta)
@@ -238,5 +273,72 @@ public class Dialogue : MonoBehaviour
         {
             Scales.Instance.AddRealistic(delta);
         }
+        index++;
+    }
+
+    private void outTextLine(int ind)
+    {
+        dialogueText.text = text[ind].Trim().Replace("*", "").Replace("&", "").Replace("#", "\n");
+        if (dialogueText.text == "")
+        {
+            mustMoveForward = true;
+        }
+        index++;
+    }
+
+    private char firstChar(int ind)
+    {
+        return currentLine(ind).ToCharArray()[0];
+    }
+
+    private char lastChar(int ind)
+    {
+        return currentLine(ind).ToCharArray()[currentLine(ind).Length - 1];
+    }
+
+    public void startDialogue()
+    {
+        DialogueManager.Instance.Show();
+        isDialogueOn = true;
+        index = 0;
+        if (TryGetComponent(out QuestIdentifier identifier))
+        {
+            reactToDialogueStart(identifier.chooseDialogue());
+        }
+        else
+        {
+            reactToDialogueStart("standard;normal");
+        }
+    }
+
+    private void reactToDialogueStart(string dialogueId)
+    {
+        if (currentLine(index).Replace("%", "") == dialogueId)
+        {
+            index++;
+            readLine();
+        }
+        else
+        {
+            index = findTheEndDialogue(index);
+            index++;
+            reactToDialogueStart(dialogueId);
+        }
+    }
+
+    private int findTheEndDialogue(int ind)
+    {
+        while (!isCurrentLineEmpty(ind))
+        {
+            ind++;
+        }
+        return ind;
+    }
+
+    public void endDialogue()
+    {
+        DialogueManager.Instance.Hide();
+        isDialogueOn = false;
+        OnEndOfDialogue?.Invoke();
     }
 }

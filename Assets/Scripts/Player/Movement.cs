@@ -27,6 +27,8 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
+        if (DialogueManager.Instance.IsDialogueOn()) return;
+
         input = InputManager.Instance.PlayerInput;
         if (input != Vector2.zero)
         {
@@ -37,6 +39,12 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (DialogueManager.Instance.IsDialogueOn())
+        {
+            velocity = Vector2.zero;
+            return;
+        }
+
         velocity = input * speed;
         Vector2 moveAmount = velocity * Time.deltaTime;
         rigidbody.MovePosition(rigidbody.position + moveAmount);

@@ -5,6 +5,7 @@ public class Globals : MonoBehaviour
     public static Globals Instance { get; private set; }
 
     public GameObject Player;
+    public GameObject Background;
 
     private void Awake()
     {
@@ -16,5 +17,7 @@ public class Globals : MonoBehaviour
         {
             Instance = this;
         }
+
+        Background.SetActive(false);
     }
 }

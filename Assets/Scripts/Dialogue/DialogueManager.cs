@@ -7,6 +7,8 @@ public class DialogueManager : MonoBehaviour
     public static DialogueManager Instance { get; private set; }
 
     public float waitTimeBetweenLetters;
+    public int maximumSymbolsInRow;
+    public int maximumRows;
 
     public GameObject DialogueBox;
     public GameObject DialogueText;
@@ -26,10 +28,7 @@ public class DialogueManager : MonoBehaviour
         {
             Instance = this;
         }
-    }
 
-    private void Start()
-    {
         ChoicesParent.SetActive(false);
         DialogueText.GetComponent<TextMeshProUGUI>().text = string.Empty;
         DialogueBox.SetActive(false);
@@ -40,9 +39,27 @@ public class DialogueManager : MonoBehaviour
         return choices;
     }
 
-    public void ShowBox()
+    public bool IsChoiceActive()
+    {
+        return choices != null;
+    }
+
+    public bool IsDialogueOn()
+    {
+        return DialogueBox.activeSelf;
+    }
+
+    public void Show()
     {
         DialogueBox.SetActive(true);
+        DialogueText.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        DialogueBox.SetActive(false);
+        DialogueText.SetActive(false);
+        DialogueText.GetComponent<TextMeshProUGUI>().text = "";
     }
 
     public Button[] ShowChoices(int quantity)
@@ -61,14 +78,13 @@ public class DialogueManager : MonoBehaviour
 
     public void HideChoices()
     {
+        if (!IsChoiceActive()) return;
+
         for (int i = 0; i < choices.Length; i++)
         {
-            Destroy(choices[i].gameObject);
+            if (choices[i])
+                Destroy(choices[i].gameObject);
         }
-    }
-
-    public void HideBox()
-    {
-        DialogueBox.SetActive(false);
+        choices = null;
     }
 }
