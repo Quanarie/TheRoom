@@ -33,6 +33,22 @@ public class Diary : MonoBehaviour
         DiaryUI.SetActive(false);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (IsDiaryOnScreen())
+            {
+                Hide();
+            }
+            else
+            {
+                Show();
+            }
+
+        }
+    }
+
     public void AddAchievement(string newLine)
     {
         string[] parts = newLine.Split(";");

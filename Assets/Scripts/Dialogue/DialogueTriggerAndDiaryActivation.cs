@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class DialogueTriggerAndDiaryActivation : DialogueTriggerOnInteract
 {
-    [SerializeField] private GameObject nextObject;
-
     protected override void Start()
     {
         base.Start();
-        nextObject.SetActive(false);
         dialogue.OnEndOfDialogue += destroyCurrentDialogueAndActivateNext;
+        Diary.Instance.gameObject.SetActive(false);
     }
 
     private void destroyCurrentDialogueAndActivateNext()
     {
         if (GetComponent<QuestIdentifier>().isCompletedAll())
         {
-            nextObject.SetActive(true);
+            Diary.Instance.gameObject.SetActive(true);
             Diary.Instance.Show();
             Destroy(dialogue);
             Destroy(this);
