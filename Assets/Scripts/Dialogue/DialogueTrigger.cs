@@ -11,4 +11,6 @@ public class DialogueTrigger : MonoBehaviour
         dialogue = gameObject.AddComponent<Dialogue>();
         dialogue.story = story;
     }
+
+    public Dialogue GetDialogue() => dialogue;
 }

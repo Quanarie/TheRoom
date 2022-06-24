@@ -19,7 +19,6 @@ public class Dialogue : MonoBehaviour
     private bool mustMoveForward = false;
 
     private TextMeshProUGUI dialogueText;
-    private string currentTypingText;
 
     private Stack<int> endsOfChoice = new();
     private Stack<int> endsOfOption = new();
@@ -32,20 +31,20 @@ public class Dialogue : MonoBehaviour
     {
         dialogueText = DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>();
         text = story.text.Split("\n").ToList();
-        formatText();
+        text = formatText(text);
     }
 
-    private void formatText()
+    private List<string> formatText(List<string> list)
     {
-        for (int k = 0; k < text.Count; k++)
+        for (int k = 0; k < list.Count; k++)
         {
-            if (text[k].Contains('&') || text[k].Contains('*') || text[k].Contains('%') || text[k].Contains('/') || text[k].Contains('^'))
+            if (list[k].Contains('&') || list[k].Contains('*') || list[k].Contains('%') || list[k].Contains('/') || list[k].Contains('^'))
                 continue;
-            if (text[k] == "")
+            if (list[k] == "")
                 continue;
 
-            char[] chars = text[k].ToCharArray();
-            text.Remove(text[k]);
+            char[] chars = list[k].ToCharArray();
+            list.Remove(list[k]);
 
             int j = 0;
             int lines = 0;
@@ -66,7 +65,7 @@ public class Dialogue : MonoBehaviour
                     else
                     {
                         lines = tempLines;
-                        text.Insert(k, newLine);
+                        list.Insert(k, newLine);
                         newLine = "";
                         j++;
                         for (; j < i; j++)
@@ -77,9 +76,10 @@ public class Dialogue : MonoBehaviour
                     }
                 }
             }
-            text.Insert(k, newLine);
+            list.Insert(k, newLine);
             k++;
         }
+        return list;
     }
 
     private void Update()
@@ -270,7 +270,6 @@ public class Dialogue : MonoBehaviour
 
     private void changeStage(int questId, int result)
     {
-        Debug.Log("id" + questId + " stage " + result);
         QuestManager.Instance.Quests[questId].SetCurrentStage(result);
         index++;
     }
