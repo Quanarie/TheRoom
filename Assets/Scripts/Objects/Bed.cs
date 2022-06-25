@@ -28,7 +28,7 @@ public class Bed : MonoBehaviour
     private void show()
     {
         DialogueManager.Instance.Show();
-        DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "І що далі?";
+        DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Це вже кінець? Немає більше нічого вартого уваги? Нічого, важливого чи цікавого?";
         if (canSleep())
         {
             Button[] choices = DialogueManager.Instance.ShowChoices(2);
@@ -45,6 +45,7 @@ public class Bed : MonoBehaviour
 
             choices[0].onClick.AddListener(() => hide());
         }
+        DialogueManager.Instance.RandomizeChoices();
     }
 
     private bool canSleep()

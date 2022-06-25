@@ -10,6 +10,9 @@ public class Dialogue : MonoBehaviour
     public delegate void EndOfDialogue();
     public event EndOfDialogue OnEndOfDialogue;
 
+    public delegate void ChoicePressed();
+    public event ChoicePressed OnChoicePressed;
+
     public TextAsset story;
 
     private List<string> text;
@@ -181,12 +184,15 @@ public class Dialogue : MonoBehaviour
             choices[i].onClick.AddListener(() => startChoices(line[capturedi]));
         }
 
+        DialogueManager.Instance.RandomizeChoices();
+
         index++; // from * to first &
         endsOfChoice.Push(findTheEndChoice(index));
     }
 
     private void startChoices(string choice)
     {
+        OnChoicePressed?.Invoke();
         DialogueManager.Instance.HideChoices();
         reactToChoice(choice);
         readLine();

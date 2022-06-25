@@ -44,4 +44,25 @@ public class InputManager : MonoBehaviour
             isInteractionPressed = false;
         }
     }
+
+    private bool isDiaryCallerPressed;
+
+    public bool GetDiaryCallerPressed()
+    {
+        bool result = isDiaryCallerPressed;
+        isDiaryCallerPressed = false;
+        return result;
+    }
+
+    public void OnDiaryCaller(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isDiaryCallerPressed = true;
+        }
+        else if (context.canceled)
+        {
+            isDiaryCallerPressed = false;
+        }
+    }
 }

@@ -9,7 +9,7 @@ public class WakeUp : DialogueTrigger
         base.Start();
         dialogue.Start();
         dialogue.startDialogue();
-        dialogue.OnEndOfDialogue += setBGNotActive;
+        dialogue.OnChoicePressed += setBGNotActive;
         Globals.Instance.Background.SetActive(true);
     }
 

@@ -35,7 +35,7 @@ public class Diary : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (InputManager.Instance.GetDiaryCallerPressed())
         {
             if (IsDiaryOnScreen())
             {
@@ -47,6 +47,7 @@ public class Diary : MonoBehaviour
             }
 
         }
+        else if (IsDiaryOnScreen() && InputManager.Instance.GetInteractionPressed()) Hide();
     }
 
     public void AddAchievement(string newLine)
@@ -103,12 +104,14 @@ public class Diary : MonoBehaviour
 
     public void Show()
     {
+        if (DialogueManager.Instance.IsDialogueOn()) return;
+
         DiaryUI.SetActive(true);
 
         string fullText = "";
         foreach (DiaryAchievement achievement in achievements)
         {
-            fullText += achievement.name + "\n" + achievement.description + "\n";
+            fullText += achievement.name + " " + getStatusSymbol(achievement.status) + "\n" + achievement.description + "\n";
         }
 
         List<string> pages = formatText(fullText);
@@ -129,6 +132,15 @@ public class Diary : MonoBehaviour
         }
 
         displayPages(currentPage); // level - 1 indstead of 0
+    }
+
+    private string getStatusSymbol(AchievementStatus status)
+    {
+        if (status == AchievementStatus.Completed) return "!COMPL!";
+        else if (status == AchievementStatus.Denied) return "!DEN!";
+        else if (status == AchievementStatus.Failed) return "!FAIL!";
+        else if (status == AchievementStatus.Inprocess) return "!INPROC!";
+        else return "";
     }
 
     private List<string> formatText(string text)
@@ -155,7 +167,7 @@ public class Diary : MonoBehaviour
                 if (lines + tempLines <= maxRows)
                 {
                     lines += tempLines;
-                    for (; j < i; j++)
+                    for (; j <= i; j++)
                     {
                         newLine += text[j];
                     }
@@ -165,7 +177,6 @@ public class Diary : MonoBehaviour
                     lines = tempLines;
                     list.Add(newLine.Trim());
                     newLine = "";
-                    j++;
                     for (; j < i; j++)
                     {
                         newLine += text[j];

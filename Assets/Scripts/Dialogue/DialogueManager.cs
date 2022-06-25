@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
+using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -74,6 +76,36 @@ public class DialogueManager : MonoBehaviour
         }
 
         return choices;
+    }
+
+    public void RandomizeChoices()
+    {
+        if (choices == null) return;
+
+        Vector3[] randomizedPositions = new Vector3[choices.Length];
+        for (int i = 0; i < choices.Length; i++)
+        {
+            randomizedPositions[i] = choices[i].GetComponent<RectTransform>().position;
+        }
+
+        randomizedPositions = reShuffle(randomizedPositions);
+
+        for (int i = 0; i < choices.Length; i++)
+        {
+            choices[i].GetComponent<RectTransform>().position = randomizedPositions[i];
+        }
+    }
+
+    private Vector3[] reShuffle(Vector3[] positions)
+    {
+        for (int t = 0; t < positions.Length; t++)
+        {
+            Vector3 tmp = positions[t];
+            int r = Random.Range(t, positions.Length);
+            positions[t] = positions[r];
+            positions[r] = tmp;
+        }
+        return positions;
     }
 
     public void HideChoices()
