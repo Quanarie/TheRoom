@@ -45,7 +45,6 @@ public class Bed : MonoBehaviour
 
             choices[0].onClick.AddListener(() => hide());
         }
-        DialogueManager.Instance.RandomizeChoices();
     }
 
     private bool canSleep()

@@ -1346,7 +1346,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 557537209}
+      - m_Target: {fileID: 820642067}
         m_TargetAssemblyTypeName: Diary, Assembly-CSharp
         m_MethodName: PreviousPage
         m_Mode: 1
@@ -2471,9 +2471,8 @@ GameObject:
   - component: {fileID: 557537205}
   - component: {fileID: 557537206}
   - component: {fileID: 557537208}
-  - component: {fileID: 557537209}
   m_Layer: 0
-  m_Name: Singletons
+  m_Name: LeaveOnLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2490,9 +2489,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1031752082}
+  - {fileID: 943128626}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &557537206
 MonoBehaviour:
@@ -2508,6 +2509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 325669251}
   Background: {fileID: 89102418}
+  Canvas: {fileID: 1130097986}
 --- !u!114 &557537208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2522,23 +2524,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels: 000000000200000003000000
   stages: 640000000a00000032000000
---- !u!114 &557537209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557537204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d4e5ca8921d542fa9d22f14f1ef044a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DiaryUI: {fileID: 1874635726}
-  diaryTextLeft: {fileID: 1008484957}
-  diaryTextRight: {fileID: 1927959337}
-  maxSymbolsInRow: 27
-  maxRows: 15
 --- !u!1 &592123984
 GameObject:
   m_ObjectHideFlags: 0
@@ -2743,7 +2728,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 557537209}
+      - m_Target: {fileID: 820642067}
         m_TargetAssemblyTypeName: Diary, Assembly-CSharp
         m_MethodName: NextPage
         m_Mode: 1
@@ -2804,6 +2789,7 @@ GameObject:
   - component: {fileID: 820642066}
   - component: {fileID: 820642065}
   - component: {fileID: 820642064}
+  - component: {fileID: 820642067}
   m_Layer: 0
   m_Name: DontDestroy
   m_TagString: Untagged
@@ -2849,8 +2835,27 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &820642067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820642063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d4e5ca8921d542fa9d22f14f1ef044a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DiaryUI: {fileID: 1874635726}
+  diaryTextLeft: {fileID: 1008484957}
+  diaryTextRight: {fileID: 1927959337}
+  statusButtonTick: {fileID: 772569777059474832, guid: 683de53eb4350472fa177de9b647bbd2, type: 3}
+  statusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
+  maxAchievementsOnPage: 8
+  maxSymbolsInDescription: 80
 --- !u!1 &911052456
 GameObject:
   m_ObjectHideFlags: 0
@@ -2961,8 +2966,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 557537205}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &943128627
 MonoBehaviour:
@@ -3187,7 +3192,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1008484955
 GameObject:
@@ -3274,8 +3279,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 26
+  m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3567,8 +3572,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 557537205}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1031752083
 MonoBehaviour:
@@ -4059,7 +4064,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1874635727
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4306,8 +4311,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 26
+  m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

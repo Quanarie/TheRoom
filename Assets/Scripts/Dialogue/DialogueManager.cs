@@ -8,9 +8,13 @@ public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance { get; private set; }
 
-    public float waitTimeBetweenLetters;
-    public int maximumSymbolsInRow;
-    public int maximumRows;
+    [SerializeField] private float waitTimeBetweenLetters;
+    [SerializeField] private int maximumSymbolsInRow;
+    [SerializeField] private int maximumRows;
+
+    public float GetTimeBetweenLetters() => waitTimeBetweenLetters;
+    public float GetMaximumSymbolsInRow() => maximumSymbolsInRow;
+    public float GetMaximumRows() => maximumRows;
 
     public GameObject DialogueBox;
     public GameObject DialogueText;

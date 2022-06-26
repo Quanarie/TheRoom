@@ -6,6 +6,7 @@ public class Globals : MonoBehaviour
 
     public GameObject Player;
     public GameObject Background;
+    public GameObject Canvas;
 
     private void Awake()
     {

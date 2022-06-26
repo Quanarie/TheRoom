@@ -56,8 +56,8 @@ public class Dialogue : MonoBehaviour
             {
                 if (chars[i] == '#' || i == chars.Length - 1)
                 {
-                    int tempLines = Mathf.CeilToInt((float)(i - j - 1) / DialogueManager.Instance.maximumSymbolsInRow);
-                    if (lines + tempLines <= DialogueManager.Instance.maximumRows)
+                    int tempLines = Mathf.CeilToInt((float)(i - j - 1) / DialogueManager.Instance.GetMaximumSymbolsInRow());
+                    if (lines + tempLines <= DialogueManager.Instance.GetMaximumRows())
                     {
                         lines += tempLines;
                         for (; j < i; j++)
@@ -157,7 +157,7 @@ public class Dialogue : MonoBehaviour
         }
         else if (firstChar(index) == '@')
         {
-            Diary.Instance.AddAchievement(text[index].Replace("@", ""));
+            Diary.Instance.AddAchievement(text[index].Replace("@", "").Trim());
             index++;
 
             if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
@@ -167,7 +167,7 @@ public class Dialogue : MonoBehaviour
 
     private bool isSpecial(char c)
     {
-        return c == '*' || c == '/' || c == '^' || c == '@';
+        return c == '/' || c == '^' || c == '@';
     }
 
     private void displayChoices()
