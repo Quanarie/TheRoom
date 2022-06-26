@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.IO;
 using System.Linq;
 
 public class Dialogue : MonoBehaviour
@@ -56,7 +55,7 @@ public class Dialogue : MonoBehaviour
             {
                 if (chars[i] == '#' || i == chars.Length - 1)
                 {
-                    int tempLines = Mathf.CeilToInt((float)(i - j - 1) / DialogueManager.Instance.GetMaximumSymbolsInRow());
+                    int tempLines = Mathf.CeilToInt((i - j - 1) / DialogueManager.Instance.GetMaximumSymbolsInRow());
                     if (lines + tempLines <= DialogueManager.Instance.GetMaximumRows())
                     {
                         lines += tempLines;
@@ -202,7 +201,9 @@ public class Dialogue : MonoBehaviour
     {
         if (currentLine(index).Replace("&", "") == choice)
         {
-            readChoice();
+            int endOfOption = findTheEndOption(index);
+            endsOfOption.Push(endOfOption);
+            index++;
         }
         else
         {
@@ -210,13 +211,6 @@ public class Dialogue : MonoBehaviour
             index++; // after option
             reactToChoice(choice);
         }
-    }
-
-    private void readChoice()
-    {
-        int endOfOption = findTheEndOption(index);
-        endsOfOption.Push(endOfOption);
-        index++;
     }
 
     private int findTheEndChoice(int ind)

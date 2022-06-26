@@ -14,7 +14,6 @@ public class Diary : MonoBehaviour
     [SerializeField] private GameObject statusButtonCross;
     [SerializeField] private int maxAchievementsOnPage;
     [SerializeField] private int maxSymbolsInRow;
-    [SerializeField] private int maxSymbolsInDescription;
 
     private List<List<DiaryAchievement>> pages = new();
 
@@ -23,9 +22,12 @@ public class Diary : MonoBehaviour
     private List<DiaryAchievement> achievements = new();
     private List<List<GameObject>> statuses = new();
 
-    private Vector3 startPosStatusLeft = new Vector3(-45f, 323f, 0f);
-    private Vector3 startPosStatusRight = new Vector3(527f, 323f, 0f);
-    private const float deltaY = 35.44f;
+    [SerializeField] private Vector3 startPosStatusLeft;
+    [SerializeField] private Vector3 startPosStatusRight;
+    [SerializeField] private float deltaY;
+    [SerializeField] private float deltaYTitle;
+    [SerializeField] private string titleFormatingStart;
+    [SerializeField] private string titleFormatingEnd;
 
     private void Awake()
     {
@@ -95,7 +97,6 @@ public class Diary : MonoBehaviour
         if (currentPage + 2 < pages.Count && pages[currentPage + 2].Count != 0)
         {
             DestroyStatuses();
-            statuses[currentPage].Clear();
 
             currentPage += 2;
             displayPages(currentPage);
@@ -107,7 +108,6 @@ public class Diary : MonoBehaviour
         if (currentPage - 2 >= 0)
         {
             DestroyStatuses();
-            statuses[currentPage].Clear();
 
             currentPage -= 2;
             displayPages(currentPage);
@@ -150,7 +150,7 @@ public class Diary : MonoBehaviour
                 if (achievements[j].level == i)
                 {
                     isEmpty = false;
-                    if (achievementOnCurrentPage + 1 < maxAchievementsOnPage)
+                    if (achievementOnCurrentPage < maxAchievementsOnPage)
                     {
                         achievementOnCurrentPage++;
                     }
@@ -193,24 +193,23 @@ public class Diary : MonoBehaviour
             {
                 if (pageIndex % 2 == 0)
                 {
-                    diaryTextLeft.text += pages[pageIndex][i].name + "\n";
+                    diaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
                     diaryTextLeft.text += pages[pageIndex][i].description + "\n";
                 }
                 else
                 {
-                    diaryTextRight.text += pages[pageIndex][i].name + "\n";
+                    diaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
                     diaryTextRight.text += pages[pageIndex][i].description + "\n";
                 }
             }
             else
             {
                 if (pageIndex % 2 == 0)
-                    diaryTextLeft.text += pages[pageIndex][i].name + "\n";
+                    diaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
                 else
-                    diaryTextRight.text += pages[pageIndex][i].name + "\n";
+                    diaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
             }
         }
-
         for (int i = 0; i < statuses[pageIndex].Count; i++)
         {
             if (statuses[pageIndex][i].GetComponent<StatusButton>().indexInList != row)
@@ -228,11 +227,11 @@ public class Diary : MonoBehaviour
           
             if (pageIndex % 2 == 0)
             {
-                newPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - (indexInList + addedLines) * deltaY, startPosStatusLeft.z); ;
+                newPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - indexInList * deltaYTitle - addedLines * deltaY, startPosStatusLeft.z); ;
             }
             else
             {
-                newPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - (indexInList + addedLines) * deltaY, startPosStatusRight.z);
+                newPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - indexInList * deltaYTitle - addedLines * deltaY, startPosStatusRight.z);
             }
 
             statuses[pageIndex][i].GetComponent<RectTransform>().localPosition = newPosition;
@@ -246,9 +245,9 @@ public class Diary : MonoBehaviour
         for (int i = 0; i < pages[pageIndex].Count; i++)
         {
             if (pageIndex % 2 == 0)
-                diaryTextLeft.text += pages[pageIndex][i].name + "\n";
+                diaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
             else
-                diaryTextRight.text += pages[pageIndex][i].name + "\n";
+                diaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
         }
 
         for (int i = 0; i < statuses[pageIndex].Count; i++)
@@ -257,11 +256,11 @@ public class Diary : MonoBehaviour
             int indexInList = statuses[pageIndex][i].GetComponent<StatusButton>().indexInList;
             if (pageIndex % 2 == 0)
             {
-                newPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - indexInList * deltaY, startPosStatusLeft.z);
+                newPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - indexInList * deltaYTitle, startPosStatusLeft.z);
             }
             else
             {
-                newPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - indexInList * deltaY, startPosStatusRight.z);
+                newPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - indexInList * deltaYTitle, startPosStatusRight.z);
             }
 
             statuses[pageIndex][i].GetComponent<RectTransform>().localPosition = newPosition;
@@ -274,7 +273,7 @@ public class Diary : MonoBehaviour
 
         for (int i = 0; i < pages[index].Count; i++)
         {
-            diaryTextLeft.text += pages[index][i].name + "\n";
+            diaryTextLeft.text += titleFormatingStart + pages[index][i].name + titleFormatingEnd + "\n";
             createStatusButton(index, i);
         }
 
@@ -282,7 +281,7 @@ public class Diary : MonoBehaviour
         {
             for (int i = 0; i < pages[index + 1].Count; i++)
             {
-                diaryTextRight.text += pages[index + 1][i].name + "\n";
+                diaryTextRight.text += titleFormatingStart + pages[index + 1][i].name + titleFormatingEnd + "\n";
                 createStatusButton(index + 1, i);
             }
         }
@@ -304,11 +303,11 @@ public class Diary : MonoBehaviour
         {
             if (index % 2 == 0)
             {
-                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - row * deltaY, startPosStatusLeft.z);
+                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - row * deltaYTitle, startPosStatusLeft.z);
             }
             else
             {
-                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - row * deltaY, startPosStatusRight.z);
+                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - row * deltaYTitle, startPosStatusRight.z);
             }
             statusButton.GetComponent<StatusButton>().pageIndex = index;
             statusButton.GetComponent<StatusButton>().indexInList = row;
@@ -333,6 +332,9 @@ public class Diary : MonoBehaviour
         {
             Destroy(statuses[currentPage + 1][i]);
         }
+
+        statuses[currentPage].Clear();
+        statuses[currentPage + 1].Clear();
     }
 
     public bool IsDiaryOnScreen() => DiaryUI.activeSelf;

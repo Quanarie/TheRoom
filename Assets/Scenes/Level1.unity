@@ -2854,9 +2854,14 @@ MonoBehaviour:
   diaryTextRight: {fileID: 1927959337}
   statusButtonTick: {fileID: 772569777059474832, guid: 683de53eb4350472fa177de9b647bbd2, type: 3}
   statusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
-  maxAchievementsOnPage: 8
+  maxAchievementsOnPage: 9
   maxSymbolsInRow: 32
-  maxSymbolsInDescription: 80
+  startPosStatusLeft: {x: -45, y: 312, z: 0}
+  startPosStatusRight: {x: 527, y: 312, z: 0}
+  deltaY: 35.6
+  deltaYTitle: 53
+  titleFormatingStart: <size=150%><b><align=left>
+  titleFormatingEnd: </size></b></align=right>
 --- !u!1 &911052456
 GameObject:
   m_ObjectHideFlags: 0
