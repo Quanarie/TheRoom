@@ -2855,6 +2855,7 @@ MonoBehaviour:
   statusButtonTick: {fileID: 772569777059474832, guid: 683de53eb4350472fa177de9b647bbd2, type: 3}
   statusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
   maxAchievementsOnPage: 8
+  maxSymbolsInRow: 32
   maxSymbolsInDescription: 80
 --- !u!1 &911052456
 GameObject:

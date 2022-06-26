@@ -13,6 +13,7 @@ public class Diary : MonoBehaviour
     [SerializeField] private GameObject statusButtonTick;
     [SerializeField] private GameObject statusButtonCross;
     [SerializeField] private int maxAchievementsOnPage;
+    [SerializeField] private int maxSymbolsInRow;
     [SerializeField] private int maxSymbolsInDescription;
 
     private List<List<DiaryAchievement>> pages = new();
@@ -20,7 +21,7 @@ public class Diary : MonoBehaviour
     private int currentPage = 0;
 
     private List<DiaryAchievement> achievements = new();
-    private List<GameObject> statuses = new();
+    private List<List<GameObject>> statuses = new();
 
     private Vector3 startPosStatusLeft = new Vector3(-45f, 323f, 0f);
     private Vector3 startPosStatusRight = new Vector3(527f, 323f, 0f);
@@ -93,6 +94,9 @@ public class Diary : MonoBehaviour
     {
         if (currentPage + 2 < pages.Count && pages[currentPage + 2].Count != 0)
         {
+            DestroyStatuses();
+            statuses[currentPage].Clear();
+
             currentPage += 2;
             displayPages(currentPage);
         }
@@ -102,6 +106,9 @@ public class Diary : MonoBehaviour
     {
         if (currentPage - 2 >= 0)
         {
+            DestroyStatuses();
+            statuses[currentPage].Clear();
+
             currentPage -= 2;
             displayPages(currentPage);
         }
@@ -133,6 +140,7 @@ public class Diary : MonoBehaviour
         int achievementOnCurrentPage = 0;
         int current = 0;
         pages.Add(new List<DiaryAchievement>());
+        statuses.Add(new List<GameObject>());
 
         for (int i = 1; ; i++) // level
         {
@@ -151,6 +159,7 @@ public class Diary : MonoBehaviour
                         achievementOnCurrentPage = 1;
                         current++;
                         pages.Add(new List<DiaryAchievement>());
+                        statuses.Add(new List<GameObject>());
                     }
                     pages[current].Add(achievements[j]);
                 }
@@ -158,31 +167,8 @@ public class Diary : MonoBehaviour
             if (isEmpty) break;
             current++;
             pages.Add(new List<DiaryAchievement>());
+            statuses.Add(new List<GameObject>());
         }
-        /*
-        for (int i = 0; i < achievements.Count; i++)
-        {
-            if (achievements[i].level == previousAchievementLevel)
-            {
-                if (achievementOnCurrentPage + 1 < maxAchievementsOnPage)
-                {
-                    achievementOnCurrentPage++;
-                }
-                else
-                {
-                    achievementOnCurrentPage = 1;
-                    current++;
-                    pages.Add(new List<DiaryAchievement>());
-                }
-            }
-            else
-            {
-                current++;
-                pages.Add(new List<DiaryAchievement>());
-                previousAchievementLevel = achievements[i].level;
-            }
-            pages[current - 1].Add(achievements[i]);
-        }*/
 
         if (achievements.Count > 0)
         {
@@ -225,45 +211,35 @@ public class Diary : MonoBehaviour
             }
         }
 
-        foreach (GameObject button in statuses)
+        for (int i = 0; i < statuses[pageIndex].Count; i++)
         {
-            if (button.GetComponent<StatusButton>().indexInList != row)
-                button.GetComponent<StatusButton>().isOpened = false;
+            if (statuses[pageIndex][i].GetComponent<StatusButton>().indexInList != row)
+            {
+                statuses[pageIndex][i].GetComponent<StatusButton>().isOpened = false;
+            }
+
+            Vector3 newPosition;
+            int indexInList = statuses[pageIndex][i].GetComponent<StatusButton>().indexInList;
+            int addedLines = 0;
+            if (statuses[pageIndex][i].GetComponent<StatusButton>().indexInList > row)
+            {
+                addedLines = Mathf.CeilToInt((float)pages[pageIndex][row].description.Length / maxSymbolsInRow);
+            }
+          
+            if (pageIndex % 2 == 0)
+            {
+                newPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - (indexInList + addedLines) * deltaY, startPosStatusLeft.z); ;
+            }
+            else
+            {
+                newPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - (indexInList + addedLines) * deltaY, startPosStatusRight.z);
+            }
+
+            statuses[pageIndex][i].GetComponent<RectTransform>().localPosition = newPosition;
         }
     }
 
     public void HideDescription(int pageIndex)
-    {
-        displayPage(pageIndex);
-    }
-
-    private void displayPages(int index)
-    {
-        for (int i = 0; i < statuses.Count; i++)
-        {
-            Destroy(statuses[i]);
-        }
-
-        statuses.Clear();
-        ClearTextes();
-
-        for (int i = 0; i < pages[index].Count; i++)
-        {
-            diaryTextLeft.text += pages[index][i].name + "\n";
-            createStatusButtons(index, i);
-        }
-
-        if (index + 1 < pages.Count)
-        {
-            for (int i = 0; i < pages[index + 1].Count; i++)
-            {
-                diaryTextRight.text += pages[index + 1][i].name + "\n";
-                createStatusButtons(index + 1, i);
-            }
-        }
-    }
-
-    private void displayPage(int pageIndex)
     {
         ClearText(pageIndex);
 
@@ -274,16 +250,52 @@ public class Diary : MonoBehaviour
             else
                 diaryTextRight.text += pages[pageIndex][i].name + "\n";
         }
+
+        for (int i = 0; i < statuses[pageIndex].Count; i++)
+        {
+            Vector3 newPosition = Vector3.zero;
+            int indexInList = statuses[pageIndex][i].GetComponent<StatusButton>().indexInList;
+            if (pageIndex % 2 == 0)
+            {
+                newPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - indexInList * deltaY, startPosStatusLeft.z);
+            }
+            else
+            {
+                newPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - indexInList * deltaY, startPosStatusRight.z);
+            }
+
+            statuses[pageIndex][i].GetComponent<RectTransform>().localPosition = newPosition;
+        }
     }
 
-    private void createStatusButtons(int index, int i)
+    private void displayPages(int index)
+    {
+        ClearTextes();
+
+        for (int i = 0; i < pages[index].Count; i++)
+        {
+            diaryTextLeft.text += pages[index][i].name + "\n";
+            createStatusButton(index, i);
+        }
+
+        if (index + 1 < pages.Count)
+        {
+            for (int i = 0; i < pages[index + 1].Count; i++)
+            {
+                diaryTextRight.text += pages[index + 1][i].name + "\n";
+                createStatusButton(index + 1, i);
+            }
+        }
+    }
+
+    private void createStatusButton(int index, int row)
     {
         GameObject statusButton = null;
-        if (pages[index][i].status == AchievementStatus.Completed)
+        if (pages[index][row].status == AchievementStatus.Completed)
         {
             statusButton = Instantiate(statusButtonTick, Globals.Instance.Canvas.transform);
         }
-        else if (pages[index][i].status == AchievementStatus.Failed)
+        else if (pages[index][row].status == AchievementStatus.Failed)
         {
             statusButton = Instantiate(statusButtonCross, Globals.Instance.Canvas.transform);
         }
@@ -292,25 +304,34 @@ public class Diary : MonoBehaviour
         {
             if (index % 2 == 0)
             {
-                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - i * deltaY, startPosStatusLeft.z);
+                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusLeft.x, startPosStatusLeft.y - row * deltaY, startPosStatusLeft.z);
             }
             else
             {
-                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - i * deltaY, startPosStatusRight.z);
+                statusButton.GetComponent<RectTransform>().localPosition = new Vector3(startPosStatusRight.x, startPosStatusRight.y - row * deltaY, startPosStatusRight.z);
             }
             statusButton.GetComponent<StatusButton>().pageIndex = index;
-            statusButton.GetComponent<StatusButton>().indexInList = i;
-            statuses.Add(statusButton);
+            statusButton.GetComponent<StatusButton>().indexInList = row;
+            statuses[index].Add(statusButton);
         }
     }
 
     public void Hide()
     {
         DiaryUI.SetActive(false);
+        DestroyStatuses();
+    }
 
-        for (int i = 0; i < statuses.Count; i++)
+    private void DestroyStatuses()
+    {
+        for (int i = 0; i < statuses[currentPage].Count; i++)
         {
-            Destroy(statuses[i]);
+            Destroy(statuses[currentPage][i]);
+        }
+
+        for (int i = 0; i < statuses[currentPage + 1].Count; i++)
+        {
+            Destroy(statuses[currentPage + 1][i]);
         }
     }
 
