@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class Globals : MonoBehaviour
 {
@@ -7,6 +8,11 @@ public class Globals : MonoBehaviour
     public GameObject Player;
     public GameObject Background;
     public GameObject Canvas;
+    public GameObject DiaryUI;
+    public TextMeshProUGUI DiaryTextLeft;
+    public TextMeshProUGUI DiaryTextRight;
+    public GameObject StatusButtonTick;
+    public GameObject StatusButtonCross;
 
     private void Awake()
     {

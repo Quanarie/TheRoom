@@ -7,13 +7,14 @@ public class Diary : MonoBehaviour
 {
     public static Diary Instance { get; private set; }
 
-    [SerializeField] private GameObject DiaryUI;
-    [SerializeField] private TextMeshProUGUI diaryTextLeft;
-    [SerializeField] private TextMeshProUGUI diaryTextRight;
-    [SerializeField] private GameObject statusButtonTick;
-    [SerializeField] private GameObject statusButtonCross;
-    [SerializeField] private int maxAchievementsOnPage;
-    [SerializeField] private int maxSymbolsInRow;
+    [SerializeField] private int maxAchievementsOnPage = 9;
+    [SerializeField] private int maxSymbolsInRow = 32;
+    [SerializeField] private Vector3 startPosStatusLeft = new Vector3(-45f, 312f, 0f);
+    [SerializeField] private Vector3 startPosStatusRight = new Vector3(527f, 312f, 0f);
+    [SerializeField] private float deltaY = 35.6f;
+    [SerializeField] private float deltaYTitle = 53;
+    [SerializeField] private string titleFormatingStart = "<size=150%><b><align=left>";
+    [SerializeField] private string titleFormatingEnd = "</size></b></align=right>";
 
     private List<List<DiaryAchievement>> pages = new();
 
@@ -21,13 +22,6 @@ public class Diary : MonoBehaviour
 
     private List<DiaryAchievement> achievements = new();
     private List<List<GameObject>> statuses = new();
-
-    [SerializeField] private Vector3 startPosStatusLeft;
-    [SerializeField] private Vector3 startPosStatusRight;
-    [SerializeField] private float deltaY;
-    [SerializeField] private float deltaYTitle;
-    [SerializeField] private string titleFormatingStart;
-    [SerializeField] private string titleFormatingEnd;
 
     private void Awake()
     {
@@ -39,7 +33,7 @@ public class Diary : MonoBehaviour
         {
             Instance = this;
         }
-        DiaryUI.SetActive(false);
+        Globals.Instance.DiaryUI.SetActive(false);
     }
 
     private void Update()
@@ -94,7 +88,7 @@ public class Diary : MonoBehaviour
 
     public void NextPage()
     {
-        if (currentPage + 2 < pages.Count && pages[currentPage + 2].Count != 0)
+        if (currentPage + 2 < pages.Count)
         {
             DestroyStatuses();
 
@@ -116,26 +110,27 @@ public class Diary : MonoBehaviour
 
     private void ClearTextes()
     {
-        diaryTextRight.text = "";
-        diaryTextLeft.text = "";
+        Globals.Instance.DiaryTextRight.text = "";
+        Globals.Instance.DiaryTextLeft.text = "";
     }
 
     private void ClearText(int pageIndex)
     {
         if (pageIndex % 2 == 0)
-            diaryTextLeft.text = "";
+            Globals.Instance.DiaryTextLeft.text = "";
         else
-            diaryTextRight.text = "";
+            Globals.Instance.DiaryTextRight.text = "";
     }
 
     public void Show()
     {
         if (DialogueManager.Instance.IsDialogueOn()) return;
 
-        DiaryUI.SetActive(true);
+        Globals.Instance.DiaryUI.SetActive(true);
 
         pages.Clear();
         ClearTextes();
+        currentPage = 0;
 
         int achievementOnCurrentPage = 0;
         int current = 0;
@@ -144,12 +139,11 @@ public class Diary : MonoBehaviour
 
         for (int i = 1; ; i++) // level
         {
-            bool isEmpty = true;
+            bool isThereNextLevelAchievement = false;
             for (int j = 0; j < achievements.Count; j++)
             {
                 if (achievements[j].level == i)
                 {
-                    isEmpty = false;
                     if (achievementOnCurrentPage < maxAchievementsOnPage)
                     {
                         achievementOnCurrentPage++;
@@ -163,16 +157,28 @@ public class Diary : MonoBehaviour
                     }
                     pages[current].Add(achievements[j]);
                 }
+                else if (achievements[j].level == i + 1)
+                {
+                    isThereNextLevelAchievement = true;
+                }
             }
-            if (isEmpty) break;
-            current++;
-            pages.Add(new List<DiaryAchievement>());
-            statuses.Add(new List<GameObject>());
+            achievementOnCurrentPage = 0;
+
+            if (isThereNextLevelAchievement)
+            {
+                current++;
+                pages.Add(new List<DiaryAchievement>());
+                statuses.Add(new List<GameObject>());
+            }
+            else
+            {
+                break;
+            }
         }
 
         if (achievements.Count > 0)
         {
-            displayPages(0);
+            displayPages(currentPage);
         }
     }
 
@@ -180,11 +186,11 @@ public class Diary : MonoBehaviour
     {
         if (pageIndex % 2 == 0)
         {
-            diaryTextLeft.text = "";
+            Globals.Instance.DiaryTextLeft.text = "";
         }
         else
         {
-            diaryTextRight.text = "";
+            Globals.Instance.DiaryTextRight.text = "";
         }
 
         for (int i = 0; i < pages[pageIndex].Count; i++)
@@ -193,21 +199,21 @@ public class Diary : MonoBehaviour
             {
                 if (pageIndex % 2 == 0)
                 {
-                    diaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
-                    diaryTextLeft.text += pages[pageIndex][i].description + "\n";
+                    Globals.Instance.DiaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
+                    Globals.Instance.DiaryTextLeft.text += pages[pageIndex][i].description + "\n";
                 }
                 else
                 {
-                    diaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
-                    diaryTextRight.text += pages[pageIndex][i].description + "\n";
+                    Globals.Instance.DiaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
+                    Globals.Instance.DiaryTextRight.text += pages[pageIndex][i].description + "\n";
                 }
             }
             else
             {
                 if (pageIndex % 2 == 0)
-                    diaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
+                    Globals.Instance.DiaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
                 else
-                    diaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
+                    Globals.Instance.DiaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
             }
         }
         for (int i = 0; i < statuses[pageIndex].Count; i++)
@@ -245,9 +251,9 @@ public class Diary : MonoBehaviour
         for (int i = 0; i < pages[pageIndex].Count; i++)
         {
             if (pageIndex % 2 == 0)
-                diaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
+                Globals.Instance.DiaryTextLeft.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
             else
-                diaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
+                Globals.Instance.DiaryTextRight.text += titleFormatingStart + pages[pageIndex][i].name + titleFormatingEnd + "\n";
         }
 
         for (int i = 0; i < statuses[pageIndex].Count; i++)
@@ -273,7 +279,7 @@ public class Diary : MonoBehaviour
 
         for (int i = 0; i < pages[index].Count; i++)
         {
-            diaryTextLeft.text += titleFormatingStart + pages[index][i].name + titleFormatingEnd + "\n";
+            Globals.Instance.DiaryTextLeft.text += titleFormatingStart + pages[index][i].name + titleFormatingEnd + "\n";
             createStatusButton(index, i);
         }
 
@@ -281,7 +287,7 @@ public class Diary : MonoBehaviour
         {
             for (int i = 0; i < pages[index + 1].Count; i++)
             {
-                diaryTextRight.text += titleFormatingStart + pages[index + 1][i].name + titleFormatingEnd + "\n";
+                Globals.Instance.DiaryTextRight.text += titleFormatingStart + pages[index + 1][i].name + titleFormatingEnd + "\n";
                 createStatusButton(index + 1, i);
             }
         }
@@ -292,11 +298,11 @@ public class Diary : MonoBehaviour
         GameObject statusButton = null;
         if (pages[index][row].status == AchievementStatus.Completed)
         {
-            statusButton = Instantiate(statusButtonTick, Globals.Instance.Canvas.transform);
+            statusButton = Instantiate(Globals.Instance.StatusButtonTick, Globals.Instance.Canvas.transform);
         }
         else if (pages[index][row].status == AchievementStatus.Failed)
         {
-            statusButton = Instantiate(statusButtonCross, Globals.Instance.Canvas.transform);
+            statusButton = Instantiate(Globals.Instance.StatusButtonCross, Globals.Instance.Canvas.transform);
         }
 
         if (statusButton)
@@ -317,8 +323,9 @@ public class Diary : MonoBehaviour
 
     public void Hide()
     {
-        DiaryUI.SetActive(false);
+        Globals.Instance.DiaryUI.SetActive(false);
         DestroyStatuses();
+        print(currentPage);
     }
 
     private void DestroyStatuses()
@@ -342,7 +349,7 @@ public class Diary : MonoBehaviour
         }
     }
 
-    public bool IsDiaryOnScreen() => DiaryUI.activeSelf;
+    public bool IsDiaryOnScreen() => Globals.Instance.DiaryUI.activeSelf;
 }
 
 public enum AchievementStatus 
