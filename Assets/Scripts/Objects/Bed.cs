@@ -72,6 +72,8 @@ public class Bed : MonoBehaviour
     private IEnumerator hideScreen()
     {
         yield return new WaitForSeconds(timeToFade);
+        DialogueManager.Instance.Hide();
+        DialogueManager.Instance.HideChoices();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

@@ -5,7 +5,7 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] private float speed;
 
-    private Rigidbody2D rigidbody;
+    private new Rigidbody2D rigidbody;
     private SpriteRenderer sprite;
 
     private Vector2 input;

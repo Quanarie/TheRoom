@@ -323,18 +323,23 @@ public class Diary : MonoBehaviour
 
     private void DestroyStatuses()
     {
-        for (int i = 0; i < statuses[currentPage].Count; i++)
+        if (currentPage < statuses.Count)
         {
-            Destroy(statuses[currentPage][i]);
+            for (int i = 0; i < statuses[currentPage].Count; i++)
+            {
+                Destroy(statuses[currentPage][i]);
+            }
+            statuses[currentPage].Clear();
         }
-
-        for (int i = 0; i < statuses[currentPage + 1].Count; i++)
+        
+        if (currentPage + 1 < statuses.Count)
         {
-            Destroy(statuses[currentPage + 1][i]);
+            for (int i = 0; i < statuses[currentPage + 1].Count; i++)
+            {
+                Destroy(statuses[currentPage + 1][i]);
+            }
+            statuses[currentPage + 1].Clear();
         }
-
-        statuses[currentPage].Clear();
-        statuses[currentPage + 1].Clear();
     }
 
     public bool IsDiaryOnScreen() => DiaryUI.activeSelf;
