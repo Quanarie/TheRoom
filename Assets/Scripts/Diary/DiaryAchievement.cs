@@ -1,3 +1,4 @@
+[System.Serializable]
 public class DiaryAchievement
 {
     public int level;

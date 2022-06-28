@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Scales : MonoBehaviour
+public class Scales : MonoBehaviour, ISaveable
 {
     public static Scales Instance { get; private set; }
 
-    private int PleasureScale;
-    private int AnxietyScale;
-    private int RealisticScale;
+    public int PleasureScale;
+    public int AnxietyScale { get; private set; }
+    public int RealisticScale { get; private set; }
 
     public void AddPleasure(int value) => PleasureScale += value;
     public void AddAnxiety(int value) => AnxietyScale += value;
@@ -24,5 +22,23 @@ public class Scales : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    public object CaptureState()
+    {
+        int[] scales = new int[3]
+        {
+            PleasureScale,
+            AnxietyScale,
+            RealisticScale
+    };
+        return scales;
+    }
+
+    public void RestoreState(object state)
+    {
+        PleasureScale = ((int[])state)[0];
+        AnxietyScale = ((int[])state)[1];
+        RealisticScale = ((int[])state)[2];
     }
 }

@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WakeUp : DialogueTrigger
 {
@@ -9,12 +8,13 @@ public class WakeUp : DialogueTrigger
         base.Start();
         dialogue.Start();
         dialogue.startDialogue();
-        dialogue.OnChoicePressed += setBGNotActive;
-        Globals.Instance.Background.SetActive(true);
+        dialogue.OnEndOfDialogue += endSituation;
+
+        Globals.Instance.Canvas.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
     }
 
-    private void setBGNotActive()
+    private void endSituation()
     {
-        Globals.Instance.Background.SetActive(false);
+        Destroy(Globals.Instance.Canvas.GetComponent<Image>());
     }
 }

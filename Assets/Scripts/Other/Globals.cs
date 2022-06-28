@@ -6,7 +6,7 @@ public class Globals : MonoBehaviour
     public static Globals Instance { get; private set; }
 
     public GameObject Player;
-    public GameObject Background;
+    public CanvasGroup Fader;
     public GameObject Canvas;
     public GameObject DiaryUI;
     public TextMeshProUGUI DiaryTextLeft;
@@ -25,6 +25,6 @@ public class Globals : MonoBehaviour
             Instance = this;
         }
 
-        Background.SetActive(false);
+        Fader.alpha = 1;
     }
 }

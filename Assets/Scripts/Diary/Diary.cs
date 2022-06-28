@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
-public class Diary : MonoBehaviour
+public class Diary : MonoBehaviour, ISaveable
 {
     public static Diary Instance { get; private set; }
 
@@ -33,6 +32,10 @@ public class Diary : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    private void Start()
+    {
         Globals.Instance.DiaryUI.SetActive(false);
     }
 
@@ -175,11 +178,7 @@ public class Diary : MonoBehaviour
                 break;
             }
         }
-
-        if (achievements.Count > 0)
-        {
-            displayPages(currentPage);
-        }
+        displayPages(currentPage);
     }
 
     public void DisplayDescription(int pageIndex, int row)
@@ -325,7 +324,6 @@ public class Diary : MonoBehaviour
     {
         Globals.Instance.DiaryUI.SetActive(false);
         DestroyStatuses();
-        print(currentPage);
     }
 
     private void DestroyStatuses()
@@ -350,6 +348,16 @@ public class Diary : MonoBehaviour
     }
 
     public bool IsDiaryOnScreen() => Globals.Instance.DiaryUI.activeSelf;
+
+    public object CaptureState()
+    {
+        return achievements;
+    }
+
+    public void RestoreState(object state)
+    {
+        achievements = (List<DiaryAchievement>)state;
+    }
 }
 
 public enum AchievementStatus 

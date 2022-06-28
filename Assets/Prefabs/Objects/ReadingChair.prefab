@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 528740612836594294}
   - component: {fileID: 528740612836594292}
   - component: {fileID: 528740612836594293}
-  - component: {fileID: 3993515227615888550}
+  - component: {fileID: 6826998919601445748}
   - component: {fileID: 3979502250474691433}
   - component: {fileID: 1754884693022692026}
   m_Layer: 0
@@ -141,7 +141,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.4688994, y: 1.4418712}
   m_EdgeRadius: 0
---- !u!114 &3993515227615888550
+--- !u!114 &6826998919601445748
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

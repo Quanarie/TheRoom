@@ -11,6 +11,11 @@ public class Bed : MonoBehaviour
 
     [SerializeField] private float timeToFade = 2f;
 
+    private void Start()
+    {
+        StartCoroutine(fadeIn());
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
@@ -66,14 +71,34 @@ public class Bed : MonoBehaviour
     {
         DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Я втомився. Здається, я зробив все, що міг. Я заслужив на відпочинок.";
         OnNextLevelTransition?.Invoke();
+        SavingSystem.Instance.Save();
+        StopAllCoroutines();
         StartCoroutine(hideScreen());
     }
 
     private IEnumerator hideScreen()
     {
-        yield return new WaitForSeconds(timeToFade);
+        yield return fadeOut();
         DialogueManager.Instance.Hide();
         DialogueManager.Instance.HideChoices();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    private IEnumerator fadeOut()
+    {
+        while (!Mathf.Approximately(Globals.Instance.Fader.alpha, 1f))
+        {
+            Globals.Instance.Fader.alpha += Time.deltaTime / timeToFade;
+            yield return null;
+        }
+    }
+
+    private IEnumerator fadeIn()
+    {
+        while (!Mathf.Approximately(Globals.Instance.Fader.alpha, 0))
+        {
+            Globals.Instance.Fader.alpha -= Time.deltaTime / timeToFade;
+            yield return null;
+        }
     }
 }
