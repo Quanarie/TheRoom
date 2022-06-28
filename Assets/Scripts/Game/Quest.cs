@@ -1,8 +1,10 @@
+using UnityEngine;
+
 [System.Serializable]
 public class Quest
 {
-    private int id;
-    private int stage = 0;
+    [SerializeField] private int id;
+    [SerializeField] private int stage = 0;
 
     public Quest(int questId)
     {

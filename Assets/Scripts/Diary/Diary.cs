@@ -127,6 +127,7 @@ public class Diary : MonoBehaviour, ISaveable
 
     public void Show()
     {
+        if (QuestManager.Instance.Quests[3].GetCurrentStage() == 0) return; // unactive before discovering
         if (DialogueManager.Instance.IsDialogueOn()) return;
 
         Globals.Instance.DiaryUI.SetActive(true);

@@ -2,22 +2,23 @@ using UnityEngine;
 
 public class SituationNearObject : DialogueTrigger
 {
+    [SerializeField] private int id;
+    [SerializeField] private int stage;
+
     protected override void Start()
     {
         base.Start();
-        dialogue.OnEndOfDialogue += destroy;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && !DialogueManager.Instance.IsDialogueOn())
+        if (QuestManager.Instance.Quests[id].GetCurrentStage() != stage) Destroy(gameObject);
+        else
         {
-            dialogue.startDialogue();
+            if (collision.CompareTag("Player") && !DialogueManager.Instance.IsDialogueOn())
+            {
+                dialogue.startDialogue();
+            }
         }
-    }
-
-    private void destroy()
-    {
-        Destroy(gameObject);
     }
 }

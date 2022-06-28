@@ -3,14 +3,22 @@ using UnityEngine.UI;
 
 public class WakeUp : DialogueTrigger
 {
+    [SerializeField] private int id;
+    [SerializeField] private int stage;
+
     protected override void Start()
     {
-        base.Start();
-        dialogue.Start();
-        dialogue.startDialogue();
-        dialogue.OnEndOfDialogue += endSituation;
+        if (QuestManager.Instance.Quests[id].GetCurrentStage() != stage) Destroy(gameObject);
+        else
+        {
+            base.Start();
+            dialogue.Start();
+            dialogue.startDialogue();
+            dialogue.OnEndOfDialogue += endSituation;
 
-        Globals.Instance.Canvas.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+            Globals.Instance.Canvas.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+
+        }
     }
 
     private void endSituation()

@@ -8,9 +8,14 @@ public class DialogueTriggerAndDiaryActivation : DialogueTriggerOnInteract
 
     protected override void Start()
     {
+        if (GetComponent<QuestIdentifier>().isCompletedAll())
+        {
+            isDestroyed = true;
+            Destroy(dialogue);
+        }
+
         base.Start();
         dialogue.OnEndOfDialogue += destroyDialogue;
-        Diary.Instance.gameObject.SetActive(false);
     }
 
     protected override void OnTriggerStay2D(Collider2D collision)
@@ -39,7 +44,6 @@ public class DialogueTriggerAndDiaryActivation : DialogueTriggerOnInteract
         if (GetComponent<QuestIdentifier>().isCompletedAll())
         {
             isDestroyed = true;
-            Diary.Instance.gameObject.SetActive(true);
             Diary.Instance.Show();
             Destroy(dialogue);
         }

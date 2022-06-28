@@ -326,6 +326,14 @@ public class Dialogue : MonoBehaviour
         }
     }
 
+    public void startDialogue(string questIdentifier)
+    {
+        DialogueManager.Instance.Show();
+        isDialogueOn = true;
+        index = 0;
+        reactToDialogueStart(questIdentifier);
+    }
+
     private void reactToDialogueStart(string dialogueId)
     {
         if (currentLine(index).Replace("%", "") == dialogueId)

@@ -4,7 +4,7 @@ public class Scales : MonoBehaviour, ISaveable
 {
     public static Scales Instance { get; private set; }
 
-    public int PleasureScale;
+    public int PleasureScale { get; private set; }
     public int AnxietyScale { get; private set; }
     public int RealisticScale { get; private set; }
 

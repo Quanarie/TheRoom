@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 528740612836594294}
   - component: {fileID: 528740612836594292}
   - component: {fileID: 528740612836594293}
-  - component: {fileID: 6826998919601445748}
-  - component: {fileID: 3979502250474691433}
+  - component: {fileID: 8155251060197230684}
   - component: {fileID: 1754884693022692026}
   m_Layer: 0
   m_Name: ReadingChair
@@ -141,7 +140,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.4688994, y: 1.4418712}
   m_EdgeRadius: 0
---- !u!114 &6826998919601445748
+--- !u!114 &8155251060197230684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,19 +149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 528740612836594184}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c873348bf64246a299c40556199eadb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3979502250474691433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 528740612836594184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e35d3ec494d3450497de1bdabc00bb5, type: 3}
+  m_Script: {fileID: 11500000, guid: 0df2b071f2b1943c390bd48abde7e166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   story: {fileID: 4900000, guid: 597e126793a744d86aec9ca004a7a749, type: 3}
@@ -178,5 +165,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf11f391f7a74cf083787085c921700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 01000000
-  stage: 01000000
+  id: 
+  stage: 

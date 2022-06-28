@@ -28,23 +28,11 @@ public class QuestManager : MonoBehaviour, ISaveable
 
     public object CaptureState()
     {
-        print("saved quests");
-        foreach (Quest item in Quests)
-        {
-            if (item.GetCurrentStage() == 0) continue;
-            print(item.GetId() + " " + item.GetCurrentStage());
-        }
         return Quests;
     }
 
     public void RestoreState(object state)
     {
         Quests = (Quest[])state;
-        print("loaded quests");
-        foreach (Quest item in Quests)
-        {
-            if (item.GetCurrentStage() == 0) continue;
-            print(item.GetId() + " " + item.GetCurrentStage());
-        }
     }
 }

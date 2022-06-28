@@ -1,14 +1,20 @@
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class Chair : MonoBehaviour
+public class Chair : DialogueTrigger
 {
-    private void Start()
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
-        SavingSystem.Instance.OnLevelLoaded += increaseStage;
-    }
-
-    private void increaseStage()
-    {
-        QuestManager.Instance.Quests[1].SetCurrentStage(QuestManager.Instance.Quests[1].GetCurrentStage() + 1); // chair quest
+        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
+        {
+            if (GetComponent<QuestIdentifier>().chooseDialogue().Split(";")[0] == "quest")
+            {
+                dialogue.startDialogue();
+            }
+            else
+            {
+                dialogue.startDialogue("quest;1;" + QuestsOnThisLevel.Instance.GetCurrentLevel().ToString());
+            }
+        }
     }
 }

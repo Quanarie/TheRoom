@@ -81,6 +81,7 @@ public class Bed : MonoBehaviour
         yield return fadeOut();
         DialogueManager.Instance.Hide();
         DialogueManager.Instance.HideChoices();
+        PlayerPrefs.SetInt("currentLevel", SceneManager.GetActiveScene().buildIndex + 1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
