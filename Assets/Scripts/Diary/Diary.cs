@@ -6,6 +6,9 @@ public class Diary : MonoBehaviour, ISaveable
 {
     public static Diary Instance { get; private set; }
 
+    public delegate void AchievementAdded(string name, AchievementStatus status);
+    public event AchievementAdded OnAchievementAdded;
+
     [SerializeField] private int maxAchievementsOnPage = 9;
     [SerializeField] private int maxSymbolsInRow = 32;
     [SerializeField] private Vector3 startPosStatusLeft = new Vector3(-45f, 312f, 0f);
@@ -64,6 +67,8 @@ public class Diary : MonoBehaviour, ISaveable
         {
             DiaryAchievement newAchievement = new DiaryAchievement(int.Parse(parts[0]), parts[2]);
             achievements.Add(newAchievement);
+
+            OnAchievementAdded?.Invoke(parts[2], AchievementStatus.Inprocess);
         }
         else if (parts[1] == "changeDescription")
         {
@@ -74,6 +79,8 @@ public class Diary : MonoBehaviour, ISaveable
         {
             int index = findAchievement(int.Parse(parts[0]), parts[2]);
             achievements[index].status = Enum.Parse<AchievementStatus>(parts[3]);
+
+            OnAchievementAdded?.Invoke(parts[2], achievements[index].status);
         }
     }
 

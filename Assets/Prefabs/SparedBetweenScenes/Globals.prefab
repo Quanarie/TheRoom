@@ -57,7 +57,7 @@ MonoBehaviour:
   DiaryTextRight: {fileID: 0}
   StatusButtonTick: {fileID: 772569777059474832, guid: 683de53eb4350472fa177de9b647bbd2, type: 3}
   StatusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
-  BlackLine: {fileID: 5094434486614388857, guid: 453b8fdd5c597408d967a7c72decbe44, type: 3}
+  Exclamation: {fileID: 3736141972116455676, guid: 3f4809334c0f14a1abbdaa3af7d5fe30, type: 3}
 --- !u!114 &5763463306427847867
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -339,10 +339,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3778606349497909052}
     - target: {fileID: 5763463306427847866, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
-      propertyPath: Exclamation
-      value: 
-      objectReference: {fileID: 3736141972116455676, guid: 3f4809334c0f14a1abbdaa3af7d5fe30, type: 3}
-    - target: {fileID: 5763463306427847866, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
       propertyPath: DiaryTextLeft
       value: 
       objectReference: {fileID: 3778606348099081903}
