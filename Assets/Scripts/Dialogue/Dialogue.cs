@@ -270,7 +270,7 @@ public class Dialogue : MonoBehaviour
 
     private void changeStage(int questId, int result)
     {
-        QuestManager.Instance.Quests[questId].SetCurrentStage(result);
+        QuestManager.Instance.SetStage(questId, result);
         index++;
     }
 

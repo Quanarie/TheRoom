@@ -13,7 +13,7 @@ public class Diary : MonoBehaviour, ISaveable
     [SerializeField] private float deltaY = 35.6f;
     [SerializeField] private float deltaYTitle = 53;
     [SerializeField] private string titleFormatingStart = "<size=150%><b><align=left>";
-    [SerializeField] private string titleFormatingEnd = "</size></b></align=right>";
+    [SerializeField] private string titleFormatingEnd = "</size></b></align=left>";
 
     private List<List<DiaryAchievement>> pages = new();
 
@@ -127,7 +127,7 @@ public class Diary : MonoBehaviour, ISaveable
 
     public void Show()
     {
-        if (QuestManager.Instance.Quests[3].GetCurrentStage() == 0) return; // unactive before discovering
+        if (QuestManager.Instance.GetStage(3) == 0) return; // unactive before discovering
         if (DialogueManager.Instance.IsDialogueOn()) return;
 
         Globals.Instance.DiaryUI.SetActive(true);
@@ -279,7 +279,15 @@ public class Diary : MonoBehaviour, ISaveable
 
         for (int i = 0; i < pages[index].Count; i++)
         {
-            Globals.Instance.DiaryTextLeft.text += titleFormatingStart + pages[index][i].name + titleFormatingEnd + "\n";
+            string formattingStart = titleFormatingStart;
+            string formattingEnd = titleFormatingEnd;
+            if (pages[index][i].status == AchievementStatus.Denied)
+            {
+                formattingStart += "<s>";
+                formattingEnd += "</s>";
+            }
+
+            Globals.Instance.DiaryTextLeft.text += formattingStart + pages[index][i].name + formattingEnd + "\n";
             createStatusButton(index, i);
         }
 
@@ -287,7 +295,15 @@ public class Diary : MonoBehaviour, ISaveable
         {
             for (int i = 0; i < pages[index + 1].Count; i++)
             {
-                Globals.Instance.DiaryTextRight.text += titleFormatingStart + pages[index + 1][i].name + titleFormatingEnd + "\n";
+                string formattingStart = titleFormatingStart;
+                string formattingEnd = titleFormatingEnd;
+                if (pages[index + 1][i].status == AchievementStatus.Denied)
+                {
+                    formattingStart += "<s>";
+                    formattingEnd += "</s>";
+                }
+
+                Globals.Instance.DiaryTextRight.text += formattingStart + pages[index + 1][i].name + formattingEnd + "\n";
                 createStatusButton(index + 1, i);
             }
         }

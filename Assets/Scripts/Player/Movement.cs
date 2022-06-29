@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviour, ISaveable
 {
     [SerializeField] private float speed;
 
@@ -52,5 +52,16 @@ public class Movement : MonoBehaviour
 
         if (moveAmount.x < 0f) sprite.flipX = true;
         else if (moveAmount.x > 0f) sprite.flipX = false;
+    }
+
+    public object CaptureState()
+    {
+        return new float[3] { transform.position.x, transform.position.y, transform.position.z };
+    }
+
+    public void RestoreState(object state)
+    {
+        float[] coordinates = (float[])state;
+        transform.position = new Vector3(coordinates[0], coordinates[1], coordinates[2]);
     }
 }

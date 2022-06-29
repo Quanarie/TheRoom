@@ -8,13 +8,12 @@ public class DialogueTriggerAndDiaryActivation : DialogueTriggerOnInteract
 
     protected override void Start()
     {
+        base.Start();
         if (GetComponent<QuestIdentifier>().isCompletedAll())
         {
             isDestroyed = true;
             Destroy(dialogue);
         }
-
-        base.Start();
         dialogue.OnEndOfDialogue += destroyDialogue;
     }
 

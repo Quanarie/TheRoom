@@ -57,6 +57,7 @@ MonoBehaviour:
   DiaryTextRight: {fileID: 0}
   StatusButtonTick: {fileID: 772569777059474832, guid: 683de53eb4350472fa177de9b647bbd2, type: 3}
   StatusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
+  BlackLine: {fileID: 5094434486614388857, guid: 453b8fdd5c597408d967a7c72decbe44, type: 3}
 --- !u!114 &5763463306427847867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,8 +70,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9daebdba11314f77994345426e351be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels: 000000000200000003000000
-  stages: 640000000a00000032000000
+  quests: 
+  stages: []
 --- !u!1 &5763463306499410572
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,7 +290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c93ea0d725f4db99483d26e2fc597a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: data
 --- !u!1 &5763463306676273676
 GameObject:
   m_ObjectHideFlags: 0

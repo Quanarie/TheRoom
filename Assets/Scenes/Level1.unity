@@ -190,7 +190,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 03f2aa82a7faa497cb8c26551f4fb659, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2251,6 +2251,7 @@ GameObject:
   - component: {fileID: 1652919045}
   - component: {fileID: 1652919047}
   - component: {fileID: 1652919046}
+  - component: {fileID: 1652919048}
   m_Layer: 0
   m_Name: MeetingChair
   m_TagString: Untagged
@@ -2286,8 +2287,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   story: {fileID: 4900000, guid: a2506811290474f04b99e1c4d422e107, type: 3}
-  id: 2
-  stage: 0
 --- !u!61 &1652919047
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2314,6 +2313,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.8197663, y: 1.438308}
   m_EdgeRadius: 0
+--- !u!114 &1652919048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652919044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf11f391f7a74cf083787085c921700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 02000000
+  stage: 00000000
 --- !u!1 &1741283028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,6 +2337,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1741283029}
   - component: {fileID: 1741283030}
+  - component: {fileID: 1741283031}
   m_Layer: 0
   m_Name: SituationWakeUp
   m_TagString: Untagged
@@ -2359,8 +2373,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   story: {fileID: 4900000, guid: a1d7ad0716da94559be27437276d2a47, type: 3}
-  id: 0
-  stage: 0
+--- !u!114 &1741283031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741283028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf11f391f7a74cf083787085c921700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 00000000
+  stage: 00000000
 --- !u!1 &1983926441
 GameObject:
   m_ObjectHideFlags: 0

@@ -63,7 +63,7 @@ public class Bed : MonoBehaviour
             bool isThereOneCorrectStage = false;
             for (int j = 0; j < stages[i].array.Length; j++)
             {
-                if (QuestManager.Instance.Quests[quests[i]].GetCurrentStage() == stages[i].array[j])
+                if (QuestManager.Instance.GetStage(quests[i]) == stages[i].array[j])
                 {
                     isThereOneCorrectStage = true;
                     break;

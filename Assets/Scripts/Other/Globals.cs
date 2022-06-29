@@ -13,6 +13,7 @@ public class Globals : MonoBehaviour
     public TextMeshProUGUI DiaryTextRight;
     public GameObject StatusButtonTick;
     public GameObject StatusButtonCross;
+    public GameObject Exclamation;
 
     private void Awake()
     {

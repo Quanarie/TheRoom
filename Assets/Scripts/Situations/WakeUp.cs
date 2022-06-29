@@ -3,15 +3,12 @@ using UnityEngine.UI;
 
 public class WakeUp : DialogueTrigger
 {
-    [SerializeField] private int id;
-    [SerializeField] private int stage;
-
     protected override void Start()
     {
-        if (QuestManager.Instance.Quests[id].GetCurrentStage() != stage) Destroy(gameObject);
+        base.Start();
+        if (identifier.chooseDialogue().Split(";")[0] == "standard") Destroy(gameObject);
         else
         {
-            base.Start();
             dialogue.Start();
             dialogue.startDialogue();
             dialogue.OnEndOfDialogue += endSituation;

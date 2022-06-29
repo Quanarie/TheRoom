@@ -4,7 +4,17 @@ public class QuestManager : MonoBehaviour, ISaveable
 {
     public static QuestManager Instance { get; private set; }
 
+    public delegate void QuestStageChanged();
+    public event QuestStageChanged OnQuestStageChanged;
+
     public Quest[] Quests;
+
+    public int GetStage(int index) => Quests[index].GetCurrentStage();
+    public void SetStage(int index, int stage)
+    {
+        Quests[index].SetCurrentStage(stage);
+        OnQuestStageChanged?.Invoke();
+    }
 
     private const int questsQuantity = 50;
 

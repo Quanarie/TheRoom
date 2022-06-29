@@ -9,7 +9,7 @@ public class QuestIdentifier : MonoBehaviour
     {
         for (int i = 0; i < id.Length; i++)
         {
-            if (QuestManager.Instance.Quests[id[i]].GetCurrentStage() == stage[i])
+            if (QuestManager.Instance.GetStage(id[i]) == stage[i])
             {
                 return "quest;" + id[i] + ";" + stage[i];
             }
@@ -21,7 +21,7 @@ public class QuestIdentifier : MonoBehaviour
     {
         for (int i = 0; i < id.Length; i++)
         {
-            if (QuestManager.Instance.Quests[id[i]].GetCurrentStage() <= stage[i])
+            if (QuestManager.Instance.GetStage(id[i]) <= stage[i])
             {
                 return false;
             }
