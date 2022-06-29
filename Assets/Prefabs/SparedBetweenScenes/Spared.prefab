@@ -354,6 +354,10 @@ PrefabInstance:
       propertyPath: DiaryTextRight
       value: 
       objectReference: {fileID: 3778606349274662875}
+    - target: {fileID: 5763463306427847867, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
+      propertyPath: stages.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5763463306546053936, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
       propertyPath: DialogueBox
       value: 

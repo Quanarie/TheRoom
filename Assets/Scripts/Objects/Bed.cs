@@ -11,6 +11,8 @@ public class Bed : MonoBehaviour
 
     [SerializeField] private float timeToFade = 2f;
 
+    private bool isTransitioning = false;
+
     private void Start()
     {
         StartCoroutine(fadeIn());
@@ -54,21 +56,32 @@ public class Bed : MonoBehaviour
 
     private bool canSleep()
     {
-        bool everyQuestOnThisLevleIsDone = true;
-        int[] lvls = QuestsOnThisLevel.Instance.GetLevels();
-        for (int i = 0; i < lvls.Length; i++)
+        int[] quests = QuestsOnThisLevel.Instance.GetQuests();
+        TwoDArray[] stages = QuestsOnThisLevel.Instance.GetStages();
+        for (int i = 0; i < quests.Length; i++)
         {
-            if (QuestManager.Instance.Quests[lvls[i]].GetCurrentStage() != QuestsOnThisLevel.Instance.GetStages()[i])
+            bool isThereOneCorrectStage = false;
+            for (int j = 0; j < stages[i].array.Length; j++)
             {
-                everyQuestOnThisLevleIsDone = false;
-                break;
+                if (QuestManager.Instance.Quests[quests[i]].GetCurrentStage() == stages[i].array[j])
+                {
+                    isThereOneCorrectStage = true;
+                    break;
+                }
+            }
+            if (isThereOneCorrectStage == false)
+            {
+                return false;
             }
         }
-        return everyQuestOnThisLevleIsDone;
+        return true;
     }
 
     private void nextLevel()
     {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
         DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Я втомився. Здається, я зробив все, що міг. Я заслужив на відпочинок.";
         OnNextLevelTransition?.Invoke();
         SavingSystem.Instance.Save();

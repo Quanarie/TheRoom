@@ -2565,6 +2565,46 @@ PrefabInstance:
       propertyPath: uniqueIdentifier
       value: 185a53de-1f8d-480e-9f98-1d4c6ceceb24
       objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: quests.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: quests.Array.data[1]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: quests.Array.data[2]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.data[0].array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.data[1].array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.data[2].array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.data[0].array.Array.data[0]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.data[1].array.Array.data[0]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778606348449366858, guid: 877504278978d41a3a55428703ff9b11, type: 3}
+      propertyPath: stages.Array.data[2].array.Array.data[0]
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4808913134964900543, guid: 877504278978d41a3a55428703ff9b11, type: 3}
       propertyPath: uniqueIdentifier
       value: 8968132d-1632-4c25-9466-9befdc653185

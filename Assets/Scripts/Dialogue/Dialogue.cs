@@ -86,7 +86,7 @@ public class Dialogue : MonoBehaviour
 
     private void Update()
     {
-        if (DialogueManager.Instance.IsChoiceActive()) return;
+        if (DialogueManager.Instance.IsChoiceActive() || index >= text.Count) return;
 
         if (!isLineEmpty(index) && isDialogueOn && endsOfChoice.Count == 0)
         {
@@ -156,7 +156,7 @@ public class Dialogue : MonoBehaviour
         }
         else if (firstChar(index) == '@')
         {
-            Diary.Instance.AddAchievement(text[index].Replace("@", "").Trim());
+            Diary.Instance.AddAchievement(text[index].Replace("@", "").Replace("*", "").Replace("&", "").Trim());
             index++;
 
             if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
@@ -313,7 +313,6 @@ public class Dialogue : MonoBehaviour
 
     public void startDialogue()
     {
-        DialogueManager.Instance.Show();
         isDialogueOn = true;
         index = 0;
         if (TryGetComponent(out QuestIdentifier identifier))
@@ -326,9 +325,8 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    public void startDialogue(string questIdentifier)
+    public void startDialogue(string questIdentifier) // for situations
     {
-        DialogueManager.Instance.Show();
         isDialogueOn = true;
         index = 0;
         reactToDialogueStart(questIdentifier);
@@ -338,6 +336,7 @@ public class Dialogue : MonoBehaviour
     {
         if (currentLine(index).Replace("%", "") == dialogueId)
         {
+            DialogueManager.Instance.Show();
             index++;
             readLine();
         }
@@ -345,7 +344,14 @@ public class Dialogue : MonoBehaviour
         {
             index = findTheEndDialogue(index);
             index++;
-            reactToDialogueStart(dialogueId);
+            if (index < text.Count)
+            {
+                reactToDialogueStart(dialogueId);
+            }
+            else
+            {
+                Debug.LogError("Did not find a dialogue for " + gameObject.name);
+            }
         }
     }
 
