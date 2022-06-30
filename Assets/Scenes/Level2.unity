@@ -2372,6 +2372,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 519169486}
     m_Modifications:
+    - target: {fileID: 3851979656531787776, guid: d50675291e21f4900bbb874321a6d417, type: 3}
+      propertyPath: id.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3851979656531787776, guid: d50675291e21f4900bbb874321a6d417, type: 3}
+      propertyPath: id.Array.data[0]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3851979656531787776, guid: d50675291e21f4900bbb874321a6d417, type: 3}
+      propertyPath: stage.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3851979656531787776, guid: d50675291e21f4900bbb874321a6d417, type: 3}
+      propertyPath: stage.Array.data[0]
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3851979656531787779, guid: d50675291e21f4900bbb874321a6d417, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -2439,8 +2455,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf11f391f7a74cf083787085c921700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 05000000
-  stage: 00000000
+  id:
+  - 5
+  stage:
+  - 0
 --- !u!1001 &4924619017265381537
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2567,6 +2585,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 519169486}
     m_Modifications:
+    - target: {fileID: 8589567359104098787, guid: c7d9222152a684d5794f6204c512a328, type: 3}
+      propertyPath: id.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8589567359104098787, guid: c7d9222152a684d5794f6204c512a328, type: 3}
+      propertyPath: id.Array.data[0]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8589567359104098787, guid: c7d9222152a684d5794f6204c512a328, type: 3}
+      propertyPath: stage.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8589567359104098787, guid: c7d9222152a684d5794f6204c512a328, type: 3}
+      propertyPath: stage.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8589567359104098788, guid: c7d9222152a684d5794f6204c512a328, type: 3}
       propertyPath: m_RootOrder
       value: 4

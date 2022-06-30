@@ -356,7 +356,7 @@ public class Dialogue : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Did not find a dialogue for " + gameObject.name);
+                Debug.LogWarning("Did not find a dialogue for " + gameObject.name);
             }
         }
     }
@@ -372,7 +372,6 @@ public class Dialogue : MonoBehaviour
 
     public void endDialogue()
     {
-        print("enddial");
         DialogueManager.Instance.Hide();
         isDialogueOn = false;
         OnEndOfDialogue?.Invoke();

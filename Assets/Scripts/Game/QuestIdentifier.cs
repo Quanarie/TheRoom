@@ -2,29 +2,57 @@
 
 public class QuestIdentifier : MonoBehaviour
 {
-    [SerializeField] private int[] id;
-    [SerializeField] private int[] stage;
+    [SerializeField] private string[] id;
+    [SerializeField] private string[] stage;
+
+    private const string orSign = "|";
+    private const string andSign = "&";
 
     public string chooseDialogue()
     {
         for (int i = 0; i < id.Length; i++)
         {
-            if (QuestManager.Instance.GetStage(id[i]) == stage[i])
+            string[] ids = id[i].Split(orSign);
+            string[] stages = stage[i].Split(orSign);
+
+            for (int j = 0; j < ids.Length; j++)
             {
-                return "quest;" + id[i] + ";" + stage[i];
+                if (checkQuests(ids[j].Replace("(", "").Replace(")", ""), stages[j].Replace("(", "").Replace(")", "")))
+                {
+                    return "quest;" + id[i] + ";" + stage[i];
+                }
             }
         }
         return "standard;normal";
     }
 
+    //%quest;5|(6&7)|(8&9&10)...;10|(20&30)|(40&50&60)...
+
+    private bool checkQuests(string ids, string stages)
+    {
+        string[] eachId = ids.Split(andSign);
+        string[] eachStage = stages.Split(andSign);
+
+        for (int i = 0; i < eachId.Length; i++)
+        {
+            if (QuestManager.Instance.GetStage(int.Parse(eachId[i])) != int.Parse(eachStage[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*if (QuestManager.Instance.GetStage(id[i]) == stage[i])
+            {
+                return "quest;" + id[i] + ";" + stage[i];
+            }*/
+
     public bool isCompletedAll()
     {
         for (int i = 0; i < id.Length; i++)
         {
-            if (QuestManager.Instance.GetStage(id[i]) <= stage[i])
-            {
-                return false;
-            }
+            
         }
         return true;
     }

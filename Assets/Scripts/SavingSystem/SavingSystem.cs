@@ -35,13 +35,12 @@ public class SavingSystem : MonoBehaviour
     public void Load()
     {
         string path = getPathToTheFile();
-        try
+        using FileStream stream = File.Open(path, FileMode.Open);
+        BinaryFormatter formatter = new BinaryFormatter();
+        if (stream.Length != 0)
         {
-            FileStream stream = File.Open(path, FileMode.Open);
-            BinaryFormatter formatter = new BinaryFormatter();
             RestoreState(formatter.Deserialize(stream));
         }
-        catch { }
     }
 
     private object CaptureState()
