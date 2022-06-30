@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Bed : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class Bed : MonoBehaviour
         DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Це вже кінець? Немає більше нічого вартого уваги? Нічого, важливого чи цікавого?";
         if (canSleep())
         {
-            Button[] choices = DialogueManager.Instance.ShowChoices(2);
+            List<Button> choices = DialogueManager.Instance.ShowChoices(2);
             choices[0].GetComponentInChildren<TextMeshProUGUI>().text = "Відпочити";
             choices[1].GetComponentInChildren<TextMeshProUGUI>().text = "Почекати";
 
@@ -47,7 +48,7 @@ public class Bed : MonoBehaviour
         }
         else
         {
-            Button[] choices = DialogueManager.Instance.ShowChoices(1);
+            List<Button> choices = DialogueManager.Instance.ShowChoices(1);
             choices[0].GetComponentInChildren<TextMeshProUGUI>().text = "Почекати";
 
             choices[0].onClick.AddListener(() => hide());

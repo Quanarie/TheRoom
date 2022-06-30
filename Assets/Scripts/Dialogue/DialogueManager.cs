@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject ChoicePrefab;
     public GameObject ChoicesParent;
 
-    private Button[] choices;
+    private List<Button> choices;
     private Vector3 startPosForChoice = new Vector3(0, -75, 0);
 
     private void Awake()
@@ -38,7 +39,7 @@ public class DialogueManager : MonoBehaviour
         DialogueBox.SetActive(false);
     }
 
-    public Button[] GetChoices()
+    public List<Button> GetChoices()
     {
         return choices;
     }
@@ -63,36 +64,47 @@ public class DialogueManager : MonoBehaviour
     {
         DialogueBox.SetActive(false);
         DialogueText.SetActive(false);
+        HideChoices();
         DialogueText.GetComponent<TextMeshProUGUI>().text = "";
     }
 
-    public Button[] ShowChoices(int quantity)
+    public List<Button> ShowChoices(int quantity)
     {
         ChoicesParent.SetActive(true);
-        choices = new Button[quantity];
+        choices = new List<Button>();
         for (int i = 0; i < quantity; i++)
         {
-            choices[i] = Instantiate(ChoicePrefab, ChoicesParent.transform).GetComponent<Button>();
-            choices[i].GetComponent<RectTransform>().localPosition =
+            Button choice = Instantiate(ChoicePrefab, ChoicesParent.transform).GetComponent<Button>();
+            choice.GetComponent<RectTransform>().localPosition =
                 new Vector3(startPosForChoice.x, startPosForChoice.y - 100 * i, startPosForChoice.z);
+            choices.Add(choice);
         }
 
         return choices;
+    }
+
+    public Button AddChoice()
+    {
+        Button choice = Instantiate(ChoicePrefab, ChoicesParent.transform).GetComponent<Button>();
+        choice.GetComponent<RectTransform>().localPosition =
+                new Vector3(startPosForChoice.x, startPosForChoice.y - 100 * choices.Count, startPosForChoice.z);
+        choices.Add(choice);
+        return choice;
     }
 
     public void RandomizeChoices()
     {
         if (choices == null) return;
 
-        Vector3[] randomizedPositions = new Vector3[choices.Length];
-        for (int i = 0; i < choices.Length; i++)
+        Vector3[] randomizedPositions = new Vector3[choices.Count];
+        for (int i = 0; i < choices.Count; i++)
         {
             randomizedPositions[i] = choices[i].GetComponent<RectTransform>().position;
         }
 
         randomizedPositions = reShuffle(randomizedPositions);
 
-        for (int i = 0; i < choices.Length; i++)
+        for (int i = 0; i < choices.Count; i++)
         {
             choices[i].GetComponent<RectTransform>().position = randomizedPositions[i];
         }
@@ -114,7 +126,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (!IsChoiceActive()) return;
 
-        for (int i = 0; i < choices.Length; i++)
+        for (int i = 0; i < choices.Count; i++)
         {
             if (choices[i])
                 Destroy(choices[i].gameObject);

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5763463306427847862}
   - component: {fileID: 5763463306427847866}
   - component: {fileID: 5763463306427847867}
+  - component: {fileID: 5042539123001357360}
   m_Layer: 0
   m_Name: Globals
   m_TagString: Untagged
@@ -72,6 +73,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quests: 
   stages: []
+--- !u!114 &5042539123001357360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5763463306427847863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fd5206e55dfc41dd80319ef3e93670c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxEnergy: 3
+  energy: 0
 --- !u!1 &5763463306499410572
 GameObject:
   m_ObjectHideFlags: 0

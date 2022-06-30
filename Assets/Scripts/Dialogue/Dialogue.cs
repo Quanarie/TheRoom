@@ -9,6 +9,9 @@ public class Dialogue : MonoBehaviour
     public delegate void EndOfDialogue();
     public event EndOfDialogue OnEndOfDialogue;
 
+    public delegate void ChoicesCreated();
+    public event ChoicesCreated OnChoicesCreated;
+
     public delegate void ChoicePressed();
     public event ChoicePressed OnChoicePressed;
 
@@ -25,6 +28,8 @@ public class Dialogue : MonoBehaviour
     private Stack<int> endsOfChoice = new();
     private Stack<int> endsOfOption = new();
 
+    private const string choiceSign = "&";
+    private const char choiceSignChar = '&';
     private const string pleasure = "Pleasure";
     private const string anxiety = "Anxiety";
     private const string realistic = "Realistic";
@@ -40,7 +45,7 @@ public class Dialogue : MonoBehaviour
     {
         for (int k = 0; k < list.Count; k++)
         {
-            if (list[k].Contains('&') || list[k].Contains('*') || list[k].Contains('%') || list[k].Contains('/') || list[k].Contains('^'))
+            if (list[k].Contains(choiceSignChar) || list[k].Contains('*') || list[k].Contains('%') || list[k].Contains('/') || list[k].Contains('^'))
                 continue;
             if (list[k] == "")
                 continue;
@@ -139,7 +144,7 @@ public class Dialogue : MonoBehaviour
         else if (firstChar(index) == '/')
         {
             string[] parameters = currentLine(index).Replace("/", "").Split(";");
-            parameters[1] = parameters[1].Replace("+", "").Replace("&", "").Replace("*", "");
+            parameters[1] = parameters[1].Replace("+", "").Replace(choiceSign, "").Replace("*", "");
             changeScale(parameters[0], int.Parse(parameters[1]));
             mustMoveForward = true;
 
@@ -148,7 +153,7 @@ public class Dialogue : MonoBehaviour
         else if (firstChar(index) == '^')
         {
             string[] parameters = currentLine(index).Replace("^", "").Split(";");
-            parameters[1] = parameters[1].Replace("&", "").Replace("*", "");
+            parameters[1] = parameters[1].Replace(choiceSign, "").Replace("*", "");
             changeStage(int.Parse(parameters[0]), int.Parse(parameters[1]));
             mustMoveForward = true;
 
@@ -156,7 +161,7 @@ public class Dialogue : MonoBehaviour
         }
         else if (firstChar(index) == '@')
         {
-            Diary.Instance.AddAchievement(text[index].Replace("@", "").Replace("*", "").Replace("&", "").Trim());
+            Diary.Instance.AddAchievement(text[index].Replace("@", "").Replace("*", "").Replace(choiceSign, "").Trim());
             index++;
 
             if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
@@ -173,9 +178,9 @@ public class Dialogue : MonoBehaviour
     {
         string[] line = currentLine(index).Split(";");
         line[0] = line[0].Replace("*", "");
-        Button[] choices = DialogueManager.Instance.ShowChoices(line.Length);
+        List<Button> choices = DialogueManager.Instance.ShowChoices(line.Length);
 
-        for (int i = 0; i < choices.Length; i++)
+        for (int i = 0; i < choices.Count; i++)
         {
             choices[i].gameObject.SetActive(true);
             choices[i].GetComponentInChildren<TextMeshProUGUI>().text = line[i];
@@ -184,6 +189,7 @@ public class Dialogue : MonoBehaviour
         }
 
         DialogueManager.Instance.RandomizeChoices();
+        OnChoicesCreated?.Invoke();
 
         index++; // from * to first &
         endsOfChoice.Push(findTheEndChoice(index));
@@ -199,7 +205,7 @@ public class Dialogue : MonoBehaviour
 
     private void reactToChoice(string choice)
     {
-        if (currentLine(index).Replace("&", "") == choice)
+        if (currentLine(index).Replace(choiceSign, "") == choice)
         {
             int endOfOption = findTheEndOption(index);
             endsOfOption.Push(endOfOption);
@@ -220,7 +226,7 @@ public class Dialogue : MonoBehaviour
         {
             ind++;
             if (firstChar(ind) == '*') i--;
-            else if (lastChar(ind) == '*' || lastChar(ind) == '&')
+            else if (lastChar(ind) == '*' || lastChar(ind) == choiceSignChar)
             {
                 for (int j = currentLine(ind).Length - 1; j > 0; j--)
                 {
@@ -228,7 +234,7 @@ public class Dialogue : MonoBehaviour
                     {
                         i++;
                     }
-                    else if (currentLine(ind).ToCharArray()[j] != '&')
+                    else if (currentLine(ind).ToCharArray()[j] != choiceSignChar)
                     {
                         break;
                     }
@@ -244,12 +250,12 @@ public class Dialogue : MonoBehaviour
         while (i < 1)
         {
             ind++;
-            if (firstChar(ind) == '&') i--;
-            else if (lastChar(ind) == '*' || lastChar(ind) == '&')
+            if (firstChar(ind) == choiceSignChar) i--;
+            else if (lastChar(ind) == '*' || lastChar(ind) == choiceSignChar)
             {
                 for (int j = currentLine(ind).Length - 1; j > 0; j--)
                 {
-                    if (currentLine(ind).ToCharArray()[j] == '&')
+                    if (currentLine(ind).ToCharArray()[j] == choiceSignChar)
                     {
                         i++;
                     }
@@ -293,7 +299,7 @@ public class Dialogue : MonoBehaviour
 
     private void outTextLine(int ind)
     {
-        dialogueText.text = text[ind].Trim().Replace("*", "").Replace("&", "").Replace("#", "\n");
+        dialogueText.text = text[ind].Trim().Replace("*", "").Replace(choiceSign, "").Replace("#", "\n");
         if (dialogueText.text == "")
         {
             mustMoveForward = true;
@@ -366,6 +372,7 @@ public class Dialogue : MonoBehaviour
 
     public void endDialogue()
     {
+        print("enddial");
         DialogueManager.Instance.Hide();
         isDialogueOn = false;
         OnEndOfDialogue?.Invoke();
