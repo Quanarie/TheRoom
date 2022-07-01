@@ -4,9 +4,29 @@ using System.IO;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject continueButton;
+
+    private void Start()
+    {
+        if (PlayerPrefs.GetString("currentLoad") == "")
+        {
+            continueButton.SetActive(false);
+        }
+        else
+        {
+            continueButton.SetActive(true);
+        }
+    }
+
     public void OnStartButtonClicked()
     {
-        SceneManager.LoadScene(PlayerPrefs.GetInt("currentLevel", 1));
+        SceneManager.LoadScene(PlayerPrefs.GetInt(PlayerPrefs.GetString("currentLoad"), 1));
+    }
+
+    public void OnNewGameButtonClicked()
+    {
+        PlayerPrefs.SetString("currentLoad", "");
+        SceneManager.LoadScene(1);
     }
 
     public void OnOptionsButtonClicked()
@@ -21,8 +41,13 @@ public class MainMenu : MonoBehaviour
 
     public void OnResetButtonClicked()
     {
-        FileStream data = File.Open(Path.Combine(Application.persistentDataPath, "data.txt"), FileMode.Truncate);
-        data.Close();
+        DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath);
+
+        foreach (FileInfo file in di.GetFiles())
+        {
+            file.Delete();
+        }
+
         PlayerPrefs.DeleteAll();
     }
 }

@@ -85,7 +85,10 @@ public class Bed : MonoBehaviour
 
         DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Я втомився. Здається, я зробив все, що міг. Я заслужив на відпочинок.";
         OnNextLevelTransition?.Invoke();
-        SavingSystem.Instance.Save();
+
+        PlayerPrefs.SetString("currentLoad", "AutoLoad.txt");
+        PlayerPrefs.SetInt("AutoLoad.txt", QuestsOnThisLevel.Instance.GetCurrentLevel() + 1);
+        SavingSystem.Instance.Save("AutoLoad.txt");
         StopAllCoroutines();
         StartCoroutine(hideScreen());
     }

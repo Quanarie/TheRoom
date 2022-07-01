@@ -21,25 +21,29 @@ public class SavingSystem : MonoBehaviour
 
     private void Start()
     {
-        Load();
+        print(PlayerPrefs.GetString("currentLoad"));
+        Load(PlayerPrefs.GetString("currentLoad", "Autoload.txt"));
     }
 
-    public void Save()
+    public void Save(string fileName)
     {
-        string path = getPathToTheFile();
+        string path = getPathToTheFile(fileName);
         using FileStream stream = File.Open(path, FileMode.Create);
         BinaryFormatter formatter = new BinaryFormatter();
         formatter.Serialize(stream, CaptureState());
     }
 
-    public void Load()
+    public void Load(string fileName)
     {
-        string path = getPathToTheFile();
-        using FileStream stream = File.Open(path, FileMode.Open);
-        BinaryFormatter formatter = new BinaryFormatter();
-        if (stream.Length != 0)
+        string path = getPathToTheFile(fileName);
+        if (File.Exists(path))
         {
-            RestoreState(formatter.Deserialize(stream));
+            using FileStream stream = File.Open(path, FileMode.Open);
+            BinaryFormatter formatter = new BinaryFormatter();
+            if (stream.Length != 0)
+            {
+                RestoreState(formatter.Deserialize(stream));
+            }
         }
     }
 
@@ -62,8 +66,8 @@ public class SavingSystem : MonoBehaviour
         }
     }
 
-    private string getPathToTheFile()
+    private string getPathToTheFile(string fileName)
     {
-        return Path.Combine(Application.persistentDataPath, "data.txt");
+        return Path.Combine(Application.persistentDataPath, fileName);
     }
 }
