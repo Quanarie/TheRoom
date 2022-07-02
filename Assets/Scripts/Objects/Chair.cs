@@ -13,7 +13,7 @@ public class Chair : DialogueTrigger
             }
             else
             {
-                dialogue.startDialogue("quest;1;" + QuestsOnThisLevel.Instance.GetCurrentLevel().ToString());
+                dialogue.startDialogue("quest;1;" + PlayerPrefs.GetInt("currentLevel").ToString());
             }
         }
     }

@@ -27,8 +27,7 @@ public class Movement : MonoBehaviour, ISaveable
 
     private void Update()
     {
-        if (DialogueManager.Instance.IsDialogueOn()) return;
-        if (Diary.Instance.IsDiaryOnScreen()) return;
+        if (!canMove()) return;
 
         input = InputManager.Instance.PlayerInput;
         if (input != Vector2.zero)
@@ -38,9 +37,18 @@ public class Movement : MonoBehaviour, ISaveable
         }
     }
 
+    private bool canMove()
+    {
+        if (DialogueManager.Instance.IsDialogueOn()) return false;
+        if (Diary.Instance.IsDiaryOnScreen()) return false;
+        if (Globals.Instance.isTransitioningDoor) return false;
+
+        return true;
+    }
+
     private void FixedUpdate()
     {
-        if (DialogueManager.Instance.IsDialogueOn() || Diary.Instance.IsDiaryOnScreen())
+        if (!canMove())
         {
             velocity = Vector2.zero;
             return;

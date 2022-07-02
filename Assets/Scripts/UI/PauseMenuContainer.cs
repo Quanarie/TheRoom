@@ -33,10 +33,10 @@ public class PauseMenuContainer : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-
     public void OnMenuButtonClicked()
     {
         StartGame();
+        Destroy(SparedObjects.Instance.gameObject);
         SceneManager.LoadScene(0);
     }
 

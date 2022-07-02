@@ -7,18 +7,6 @@ using System.Collections.Generic;
 
 public class Bed : MonoBehaviour
 {
-    public delegate void NextLevelTransition();
-    public static event NextLevelTransition OnNextLevelTransition;
-
-    [SerializeField] private float timeToFade = 2f;
-
-    private bool isTransitioning = false;
-
-    private void Start()
-    {
-        StartCoroutine(fadeIn());
-    }
-
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
@@ -43,7 +31,7 @@ public class Bed : MonoBehaviour
             choices[0].GetComponentInChildren<TextMeshProUGUI>().text = "Відпочити";
             choices[1].GetComponentInChildren<TextMeshProUGUI>().text = "Почекати";
 
-            choices[0].onClick.AddListener(() => nextLevel());
+            choices[0].onClick.AddListener(() => Globals.Instance.GameManager.nextLevel());
             choices[1].onClick.AddListener(() => hide());
         }
         else
@@ -76,47 +64,5 @@ public class Bed : MonoBehaviour
             }
         }
         return true;
-    }
-
-    private void nextLevel()
-    {
-        if (isTransitioning) return;
-        isTransitioning = true;
-
-        DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Я втомився. Здається, я зробив все, що міг. Я заслужив на відпочинок.";
-        OnNextLevelTransition?.Invoke();
-
-        PlayerPrefs.SetString("currentLoad", "AutoLoad.txt");
-        PlayerPrefs.SetInt("AutoLoad.txt", QuestsOnThisLevel.Instance.GetCurrentLevel() + 1);
-        SavingSystem.Instance.Save("AutoLoad.txt");
-        StopAllCoroutines();
-        StartCoroutine(hideScreen());
-    }
-
-    private IEnumerator hideScreen()
-    {
-        yield return fadeOut();
-        DialogueManager.Instance.Hide();
-        DialogueManager.Instance.HideChoices();
-        PlayerPrefs.SetInt("currentLevel", SceneManager.GetActiveScene().buildIndex + 1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-
-    private IEnumerator fadeOut()
-    {
-        while (!Mathf.Approximately(Globals.Instance.Fader.alpha, 1f))
-        {
-            Globals.Instance.Fader.alpha += Time.deltaTime / timeToFade;
-            yield return null;
-        }
-    }
-
-    private IEnumerator fadeIn()
-    {
-        while (!Mathf.Approximately(Globals.Instance.Fader.alpha, 0))
-        {
-            Globals.Instance.Fader.alpha -= Time.deltaTime / timeToFade;
-            yield return null;
-        }
     }
 }

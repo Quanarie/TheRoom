@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3073255362034926821}
+  - component: {fileID: 6615085658335159608}
   m_Layer: 0
   m_Name: Spared
   m_TagString: Untagged
@@ -34,6 +35,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6615085658335159608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7105162927279081100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 988feefe21f864eb198cf294339528e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3592030463311749117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -385,6 +398,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3778606349497909052}
     - target: {fileID: 5763463306427847866, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
+      propertyPath: SpawnPoint
+      value: 
+      objectReference: {fileID: 6402539413917349627}
+    - target: {fileID: 5763463306427847866, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
       propertyPath: DiaryTextLeft
       value: 
       objectReference: {fileID: 3778606348099081903}
@@ -428,5 +445,10 @@ MonoBehaviour:
 --- !u!4 &3778606348449366855 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5763463306427847862, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
+  m_PrefabInstance: {fileID: 8902386262120142833}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6402539413917349627 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2545029186897453322, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
   m_PrefabInstance: {fileID: 8902386262120142833}
   m_PrefabAsset: {fileID: 0}

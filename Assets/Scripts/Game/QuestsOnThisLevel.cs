@@ -3,19 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class QuestsOnThisLevel : MonoBehaviour
 {
-    [SerializeField] private int[] quests;
-    [SerializeField] private TwoDArray[] stages;
+    [SerializeField] private TwoDArray[] quests;
+    [SerializeField] private ThreeDArray[] stages;
 
-    public int[] GetQuests() => quests;
-    public TwoDArray[] GetStages() => stages;
-
-    public int GetCurrentLevel()
-    {
-        string name = SceneManager.GetActiveScene().name;
-        string lastLetter = name[name.Length - 1].ToString();
-        int level = int.Parse(lastLetter);
-        return level;
-    }
+    public int[] GetQuests() => quests[PlayerPrefs.GetInt("currentLevel")].array;
+    public TwoDArray[] GetStages() => stages[PlayerPrefs.GetInt("currentLevel")].array;
 
     public static QuestsOnThisLevel Instance { get; private set; }
 
@@ -36,4 +28,10 @@ public class QuestsOnThisLevel : MonoBehaviour
 public class TwoDArray
 {
     public int[] array;
+}
+
+[System.Serializable]
+public class ThreeDArray
+{
+    public TwoDArray[] array;
 }

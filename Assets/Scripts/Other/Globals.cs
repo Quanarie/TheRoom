@@ -15,6 +15,10 @@ public class Globals : MonoBehaviour
     public GameObject StatusButtonCross;
     public GameObject Exclamation;
 
+    public bool isTransitioningDoor = false;
+
+    public GameManager GameManager { get; private set; }
+
     private void Awake()
     {
         if (Instance && Instance != this)
@@ -25,7 +29,7 @@ public class Globals : MonoBehaviour
         {
             Instance = this;
         }
-
+        GameManager = GetComponent<GameManager>();
         Fader.alpha = 1;
     }
 }

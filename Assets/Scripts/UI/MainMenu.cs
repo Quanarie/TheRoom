@@ -25,6 +25,7 @@ public class MainMenu : MonoBehaviour
 
     public void OnNewGameButtonClicked()
     {
+        PlayerPrefs.SetInt("currentLevel", 1);
         PlayerPrefs.SetString("currentLoad", "");
         SceneManager.LoadScene(1);
     }

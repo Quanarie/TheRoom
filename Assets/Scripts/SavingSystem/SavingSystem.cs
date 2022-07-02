@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class SavingSystem : MonoBehaviour
 {
+    public delegate void Loaded();
+    public event Loaded OnLoaded;
+
     public static SavingSystem Instance { get; private set; }
 
     private void Awake()
@@ -17,12 +20,6 @@ public class SavingSystem : MonoBehaviour
         {
             Instance = this;
         }
-    }
-
-    private void Start()
-    {
-        print(PlayerPrefs.GetString("currentLoad"));
-        Load(PlayerPrefs.GetString("currentLoad", "Autoload.txt"));
     }
 
     public void Save(string fileName)
@@ -43,6 +40,7 @@ public class SavingSystem : MonoBehaviour
             if (stream.Length != 0)
             {
                 RestoreState(formatter.Deserialize(stream));
+                OnLoaded?.Invoke();
             }
         }
     }

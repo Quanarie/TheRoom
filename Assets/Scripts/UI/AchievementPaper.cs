@@ -8,19 +8,17 @@ public class AchievementPaper : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private Vector3 position; 
-    private Image image;
     private GameObject statusImage;
 
     private void Start()
     {
-        image = GetComponent<Image>();
-        image.enabled = false;
+        GetComponent<Image>().enabled = false;
         Diary.Instance.OnAchievementAdded += OnAchievementAdded;
     }
 
     private void OnAchievementAdded(string name, AchievementStatus status)
     {
-        image.enabled = true;
+        GetComponent<Image>().enabled = true;
 
         if (statusImage)
         {
@@ -59,11 +57,16 @@ public class AchievementPaper : MonoBehaviour
     private IEnumerator hidePaper()
     {
         yield return new WaitForSeconds(2f);
-        image.enabled = false;
+        GetComponent<Image>().enabled = false;
         text.text = "";
         if (statusImage)
         {
             Destroy(statusImage);
         }
+    }
+
+    private void OnDestroy()
+    {
+        Diary.Instance.OnAchievementAdded -= OnAchievementAdded;
     }
 }
