@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 528740612836594292}
   - component: {fileID: 528740612836594293}
   - component: {fileID: 8155251060197230684}
-  - component: {fileID: 1754884693022692026}
+  - component: {fileID: 8194303127721719546}
   m_Layer: 0
   m_Name: ReadingChair
   m_TagString: Untagged
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   story: {fileID: 4900000, guid: 597e126793a744d86aec9ca004a7a749, type: 3}
---- !u!114 &1754884693022692026
+--- !u!114 &8194303127721719546
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,5 +165,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf11f391f7a74cf083787085c921700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 
-  stage: 
+  id: []
+  stage: []

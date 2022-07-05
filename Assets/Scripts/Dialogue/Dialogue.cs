@@ -28,8 +28,8 @@ public class Dialogue : MonoBehaviour
     private Stack<int> endsOfChoice = new();
     private Stack<int> endsOfOption = new();
 
-    private const string choiceSign = "&";
-    private const char choiceSignChar = '&';
+    private const string choiceSign = "~";
+    private const char choiceSignChar = '~';
     private const string pleasure = "Pleasure";
     private const string anxiety = "Anxiety";
     private const string realistic = "Realistic";
@@ -154,7 +154,7 @@ public class Dialogue : MonoBehaviour
         {
             string[] parameters = currentLine(index).Replace("^", "").Split(";");
             parameters[1] = parameters[1].Replace(choiceSign, "").Replace("*", "");
-            changeStage(int.Parse(parameters[0]), int.Parse(parameters[1]));
+            changeStage(parameters[0], parameters[1]);
             mustMoveForward = true;
 
             if (!isLineEmpty(index) && isSpecial(firstChar(index))) readLine();
@@ -274,9 +274,17 @@ public class Dialogue : MonoBehaviour
         return text[ind].TrimStart('\t').TrimEnd();
     }
 
-    private void changeStage(int questId, int result)
+    private void changeStage(string questId, string result)
     {
-        QuestManager.Instance.SetStage(questId, result);
+        if ((questId[0] == '+') || (questId[0] == '-'))
+        {
+            QuestManager.Instance.ChangeStage(int.Parse(questId), int.Parse(result));
+        }
+        else
+        {
+            QuestManager.Instance.SetStage(int.Parse(questId), int.Parse(result));
+        }
+
         index++;
     }
 
@@ -331,11 +339,11 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    public void startDialogue(string questIdentifier) // for situations
+    public void startDialogue(string situationName) // for situations
     {
         isDialogueOn = true;
         index = 0;
-        reactToDialogueStart(questIdentifier);
+        reactToDialogueStart(situationName);
     }
 
     private void reactToDialogueStart(string dialogueId)

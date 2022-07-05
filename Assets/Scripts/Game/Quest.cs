@@ -18,6 +18,7 @@ public class Quest
     public int GetCurrentStage() => stage;
 
     public void SetCurrentStage(int value) => stage = value;
+    public void ChangeCurrentStage(int delta) => stage += delta;
 
     public bool IsQuestComplete() => stage == 100;
 }

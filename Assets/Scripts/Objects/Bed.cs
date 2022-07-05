@@ -31,7 +31,7 @@ public class Bed : MonoBehaviour
             choices[0].GetComponentInChildren<TextMeshProUGUI>().text = "Відпочити";
             choices[1].GetComponentInChildren<TextMeshProUGUI>().text = "Почекати";
 
-            choices[0].onClick.AddListener(() => Globals.Instance.GameManager.nextLevel());
+            choices[0].onClick.AddListener(() => nextLevel());
             choices[1].onClick.AddListener(() => hide());
         }
         else
@@ -41,6 +41,11 @@ public class Bed : MonoBehaviour
 
             choices[0].onClick.AddListener(() => hide());
         }
+    }
+
+    private void nextLevel()
+    {
+        Globals.Instance.GameManager.nextLevel();
     }
 
     private bool canSleep()

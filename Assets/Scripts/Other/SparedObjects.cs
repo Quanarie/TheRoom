@@ -4,9 +4,9 @@ public class SparedObjects : MonoBehaviour
 {
     public static SparedObjects Instance { get; private set; }
 
-    private void OnEnable()
+    private void Awake()
     {
-        if (Instance)
+        if (Instance && Instance != this)
         {
             Destroy(gameObject);
         }

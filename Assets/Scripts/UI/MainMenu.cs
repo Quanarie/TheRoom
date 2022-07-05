@@ -50,5 +50,7 @@ public class MainMenu : MonoBehaviour
         }
 
         PlayerPrefs.DeleteAll();
+
+        continueButton.SetActive(false);
     }
 }

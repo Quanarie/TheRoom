@@ -1,28 +1,34 @@
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuContainer : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenu;
-
-    private void Start()
-    {
-        pauseMenu.SetActive(false);
-    }
+    [SerializeField] private GameObject saveMenu;
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            pauseMenu.SetActive(!pauseMenu.activeSelf);
+            if (saveMenu.activeSelf)
+            {
+                saveMenu.SetActive(false);
+                StartGame();
+            }
+            else
+            {
+                pauseMenu.SetActive(!pauseMenu.activeSelf);
 
-            if (pauseMenu.activeSelf) PauseGame();
-            else StartGame();
+                if (pauseMenu.activeSelf) PauseGame();
+                else StartGame();
+            }
         }
     }
 
     private void PauseGame()
     {
+        saveMenu.SetActive(false);
         Globals.Instance.Player.GetComponent<Animator>().enabled = false;
         Time.timeScale = 0f;
     }
@@ -43,5 +49,14 @@ public class PauseMenuContainer : MonoBehaviour
     public void OnQuitButtonClicked()
     {
         Application.Quit();
+    }
+
+    public void OnSaveClicked(Button button)
+    {
+        PlayerPrefs.SetString("currentLoad", button.name + ".txt");
+        PlayerPrefs.SetInt(button.name + ".txt", SceneManager.GetActiveScene().buildIndex);
+        PlayerPrefs.SetInt(button.name + ".level", PlayerPrefs.GetInt("currentLevel"));
+
+        SavingSystem.Instance.Save(button.name + ".txt");
     }
 }

@@ -60,7 +60,10 @@ public class SavingSystem : MonoBehaviour
         Dictionary<string, object> dict = (Dictionary<string, object>)state;
         foreach (Saveable saveable in FindObjectsOfType<Saveable>())
         {
-            saveable.RestoreState(dict[saveable.GetUniqueIdentifier()]);
+            if (dict.ContainsKey(saveable.GetUniqueIdentifier()))
+            {
+                saveable.RestoreState(dict[saveable.GetUniqueIdentifier()]);
+            }
         }
     }
 

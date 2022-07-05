@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5763463306427847863}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -60,6 +60,7 @@ MonoBehaviour:
   StatusButtonTick: {fileID: 772569777059474832, guid: 683de53eb4350472fa177de9b647bbd2, type: 3}
   StatusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
   Exclamation: {fileID: 3736141972116455676, guid: 3f4809334c0f14a1abbdaa3af7d5fe30, type: 3}
+  isTransitioningDoor: 0
 --- !u!114 &5042539123001357360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,8 +100,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9daebdba11314f77994345426e351be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quests: []
-  stages: []
+  quests:
+  - array: 
+  - array: 000000000200000003000000
+  - array: 0400000005000000
+  - array: 0400000006000000
+  stages:
+  - array:
+    - array: 
+  - array:
+    - array: 64000000
+    - array: 0a000000
+    - array: 32000000
+  - array:
+    - array: 32000000
+    - array: 620000006300000064000000
+  - array:
+    - array: 32000000
+    - array: 620000006300000064000000
 --- !u!1 &5763463306499410572
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,7 +287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waitTimeBetweenLetters: 0.02
   maximumSymbolsInRow: 90
-  maximumRows: 8
+  maximumRows: 7
   DialogueBox: {fileID: 0}
   DialogueText: {fileID: 0}
   ChoicePrefab: {fileID: 2102334169287089898, guid: 3ff1a10d9e219428e8c2fdd0a409e831, type: 3}

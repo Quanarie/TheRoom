@@ -15,6 +15,11 @@ public class QuestManager : MonoBehaviour, ISaveable
         Quests[index].SetCurrentStage(stage);
         OnQuestStageChanged?.Invoke();
     }
+    public void ChangeStage(int index, int delta)
+    {
+        Quests[index].ChangeCurrentStage(delta);
+        OnQuestStageChanged?.Invoke();
+    }
 
     private const int questsQuantity = 50;
 

@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
         DialogueManager.Instance.Hide();
         DialogueManager.Instance.HideChoices();
         PlayerPrefs.SetInt("currentLevel", PlayerPrefs.GetInt("currentLevel") + 1);
+        isTransitioning = false;
         SceneManager.LoadScene(1); // first room
     }
 
