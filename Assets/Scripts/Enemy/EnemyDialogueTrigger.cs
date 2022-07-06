@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class EnemyDialogueTrigger : DialogueTrigger
 {
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
@@ -17,24 +12,6 @@ public class EnemyDialogueTrigger : DialogueTrigger
             subscribe();
             dialogue.startDialogue();
         }
-    }
-
-    private void tryDisableButtons()
-    {
-        if (LevelData.Instance.GetEnergy() == 0)
-        {
-            List<Button> choices = DialogueManager.Instance.GetChoices();
-            foreach (Button choice in choices)
-            {
-                choice.onClick.RemoveAllListeners();
-            }
-        }
-        addExitChoice();
-    }
-
-    private void onChoiceChosen()
-    {
-        LevelData.Instance.ChangeEnergy(-1);
     }
 
     private void addExitChoice()
@@ -58,14 +35,13 @@ public class EnemyDialogueTrigger : DialogueTrigger
     private void subscribe()
     {
         dialogue.OnEndOfDialogue += startNextDialogue;
-        dialogue.OnChoicesCreated += tryDisableButtons;
-        dialogue.OnChoicePressed += onChoiceChosen;
+        dialogue.OnChoicesCreated += addExitChoice;
+
     }
 
     private void unSubscribe()
     {
         dialogue.OnEndOfDialogue -= startNextDialogue;
-        dialogue.OnChoicesCreated -= tryDisableButtons;
-        dialogue.OnChoicePressed -= onChoiceChosen;
+        dialogue.OnChoicesCreated -= addExitChoice;
     }
 }

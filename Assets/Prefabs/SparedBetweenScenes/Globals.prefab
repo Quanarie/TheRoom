@@ -116,8 +116,8 @@ MonoBehaviour:
     - array: 32000000
     - array: 620000006300000064000000
   - array:
-    - array: 32000000
-    - array: 620000006300000064000000
+    - array: 64000000
+    - array: 01000000
 --- !u!1 &5763463306499410572
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 383184833573089235}
   - component: {fileID: 5763463306676273680}
   - component: {fileID: 3927649035789940250}
+  - component: {fileID: 6092779274186876822}
   - component: {fileID: 6862318784059401637}
   m_Layer: 0
   m_Name: SaveLoad
@@ -383,6 +384,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a7ad6dfb0154094865dd7b6d9bc0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PleasureScale: 0
+  AnxietyScale: 0
+  RealisticScale: 0
 --- !u!114 &5763463306676273680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,6 +420,79 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Quests: []
+--- !u!114 &6092779274186876822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5763463306676273676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 299d2b617f5804650a5799596598d4c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  story: {fileID: 4900000, guid: 1f2be9636a2714841a39648dc2b4b59f, type: 3}
+  Situations:
+  - name: WakeUp
+    lvl: 1
+    pleasureNeeded: -1
+    anxietyNeeded: -1
+    realisticNeeded: -1
+    isOneTime: 1
+    quests: 00000000
+    stages:
+    - array: 00000000
+    place:
+      x: 0
+      y: 0
+      z: 0
+    distanceToThis: -1
+    isDone: 0
+  - name: MeetingChair
+    lvl: 1
+    pleasureNeeded: -1
+    anxietyNeeded: -1
+    realisticNeeded: -1
+    isOneTime: 1
+    quests: 02000000
+    stages:
+    - array: 00000000
+    place:
+      x: -0.6
+      y: -2.6
+      z: 0
+    distanceToThis: 1
+    isDone: 0
+  - name: MeetingJigsawPuzzle
+    lvl: 2
+    pleasureNeeded: -1
+    anxietyNeeded: -1
+    realisticNeeded: -1
+    isOneTime: 1
+    quests: 05000000
+    stages:
+    - array: 00000000
+    place:
+      x: 1.67
+      y: -2.48
+      z: 0
+    distanceToThis: 1.5
+    isDone: 0
+  - name: DoorSRtoC1
+    lvl: 3
+    pleasureNeeded: -1
+    anxietyNeeded: -1
+    realisticNeeded: -1
+    isOneTime: 1
+    quests: 
+    stages: []
+    place:
+      x: -2.5
+      y: 2.5
+      z: 0
+    distanceToThis: 2
+    isDone: 0
 --- !u!114 &6862318784059401637
 MonoBehaviour:
   m_ObjectHideFlags: 0

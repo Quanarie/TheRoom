@@ -24,6 +24,36 @@ public class Scales : MonoBehaviour, ISaveable
         }
     }
 
+    public bool IsBiggerThen(string scale1, string scale2)
+    {
+        return (getScale(scale1) > getScale(scale2));
+    }
+
+    public bool IsLessThen(string scale1, string scale2)
+    {
+        return (getScale(scale1) < getScale(scale2));
+    }
+
+    private int getScale(string scale)
+    {
+        if (scale == "Pleasure")
+        {
+            return PleasureScale;
+        }
+        else if (scale == "Anxiety")
+        {
+            return AnxietyScale;
+        }
+        else if(scale == "Realistic")
+        {
+            return RealisticScale;
+        }
+        else
+        {
+            return int.Parse(scale);
+        }
+    }
+
     public object CaptureState()
     {
         int[] scales = new int[3]

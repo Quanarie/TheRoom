@@ -1,56 +1,22 @@
 using UnityEngine;
 
-public class Situation : MonoBehaviour, ISaveable
+[System.Serializable]
+public class Situation
 {
+    public string name;
+    public int lvl;
     [SerializeField] private int pleasureNeeded;
     [SerializeField] private int anxietyNeeded;
     [SerializeField] private int realisticNeeded;
-    [SerializeField] private bool isOneTime;
+    public bool isOneTime;
     [SerializeField] private int[] quests;
     [SerializeField] private TwoDArray[] stages;
+    public SerializableVector3 place;
     [SerializeField] private float distanceToThis;
-    [SerializeField] private TextAsset story;
 
-    private Dialogue dialogue;
-    private GameObject exclamationPoint;
-    private bool isDone = false;
+    [HideInInspector] public bool isDone = false;
 
-    private void Update()
-    {
-        bool scales = CheckScales();
-        bool distance = CheckDistance();
-        bool quests = CheckQuests();
-
-        if (scales && quests && !isDone && !distance)
-        {
-            if (exclamationPoint == null)
-            {
-               exclamationPoint = Instantiate(Globals.Instance.Exclamation, new Vector3(transform.position.x,
-               transform.position.y + 1f, transform.position.z), Quaternion.identity, transform);
-            }
-        }
-
-        if (scales && distance && quests && !isDone)
-        {
-            dialogue = gameObject.AddComponent<Dialogue>();
-            dialogue.story = story;
-            dialogue.Start();
-            dialogue.startDialogue("situation;" + gameObject.name);
-            dialogue.OnEndOfDialogue += destroyExclamation;
-
-            if (isOneTime == true)
-            {
-                isDone = true;
-            }
-        }
-    }
-
-    private void destroyExclamation()
-    {
-        Destroy(exclamationPoint);
-    }
-
-    private bool CheckScales()
+    public bool CheckScales()
     {
         if (pleasureNeeded != -1 && Scales.Instance.PleasureScale < pleasureNeeded) return false;
         if (anxietyNeeded != -1 && Scales.Instance.AnxietyScale < anxietyNeeded) return false;
@@ -59,16 +25,16 @@ public class Situation : MonoBehaviour, ISaveable
         return true;
     }
 
-    private bool CheckDistance()
+    public bool CheckDistance()
     {
         if (distanceToThis == -1) return true;
-        else if (Vector3.Distance(transform.position,
+        else if (Vector3.Distance(new Vector3(place.x, place.y, place.z),
             Globals.Instance.Player.transform.position) <= distanceToThis) return true;
 
         return false;
     }
 
-    private bool CheckQuests()
+    public bool CheckQuests()
     {
         if (quests.Length == 0) return true;
 
@@ -84,14 +50,12 @@ public class Situation : MonoBehaviour, ISaveable
         }
         return false;
     }
+}
 
-    public object CaptureState()
-    {
-        return isDone;
-    }
-
-    public void RestoreState(object state)
-    {
-        isDone = (bool)state;
-    }
+[System.Serializable]
+public class SerializableVector3
+{
+    public float x;
+    public float y;
+    public float z;
 }

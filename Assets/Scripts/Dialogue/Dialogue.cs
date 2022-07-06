@@ -183,9 +183,40 @@ public class Dialogue : MonoBehaviour
         for (int i = 0; i < choices.Count; i++)
         {
             choices[i].gameObject.SetActive(true);
-            choices[i].GetComponentInChildren<TextMeshProUGUI>().text = line[i];
             int capturedi = i;
-            choices[i].onClick.AddListener(() => startChoices(line[capturedi]));
+            if (line[i].Contains('(') && line[i].Contains(')'))
+            {
+                string conditions = "";
+                for (int j = 0; j < line[i].Length; j++)
+                {
+                    if (line[i][j] == '(')
+                    {
+                        for (int k = j + 1; k < line[i].Length - 1; k++)
+                        {
+                            conditions += line[i][k];
+                        }
+                        break;
+                    }
+                }
+                string text = "";
+                foreach(char c in line[i])
+                {
+                    if (c != '(') text += c;
+                    else break;
+                }
+                line[i] = text;
+
+                if (isChoiceActive(conditions))
+                {
+                    choices[i].onClick.AddListener(() => startChoices(line[capturedi]));
+                }
+            }
+            else
+            {
+                choices[i].onClick.AddListener(() => startChoices(line[capturedi]));
+            }
+
+            choices[i].GetComponentInChildren<TextMeshProUGUI>().text = line[i];
         }
 
         DialogueManager.Instance.RandomizeChoices();
@@ -193,6 +224,53 @@ public class Dialogue : MonoBehaviour
 
         index++; // from * to first &
         endsOfChoice.Push(findTheEndChoice(index));
+    }
+
+    private bool isChoiceActive(string disjConjText)
+    {
+        string[] conjParts = disjConjText.Split("|");
+        for (int i = 0; i < conjParts.Length; i++)
+        {
+            bool isPartTrue = true;
+            string[] conditions = conjParts[i].Split("&");
+            for (int j = 0; j < conditions.Length; j++)
+            {
+                if (!CheckCondition(conditions[j].Replace("(", "").Replace(")", "")))
+                {
+                    isPartTrue = false;
+                    break;
+                }
+            }
+
+            if (isPartTrue) return true;
+        }
+        return false;
+    }
+
+    private bool CheckCondition(string condition)
+    {
+        if (condition.Split("<").Length > 1)
+        {
+            string[] splitted = condition.Split("<");
+            return Scales.Instance.IsLessThen(splitted[0], splitted[1]);
+        }
+        else if (condition.Split(">").Length > 1)
+        {
+            string[] splitted = condition.Split(">");
+            if (condition[0] == 'l')
+            {
+                return PlayerPrefs.GetInt("currentLevel") > int.Parse(splitted[1]);
+            }
+
+            return Scales.Instance.IsBiggerThen(splitted[0], splitted[1]);
+        }
+        else
+        {
+            string[] splitted = condition.Replace("q", "").Replace(":", "").Replace("(", "").Replace(")", "").Split("/");
+            int id = int.Parse(splitted[0]);
+            int stage = int.Parse(splitted[1]);
+            return QuestManager.Instance.GetStage(id) == stage;
+        }
     }
 
     private void startChoices(string choice)
