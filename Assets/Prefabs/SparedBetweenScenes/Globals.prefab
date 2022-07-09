@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5763463306427847862}
   - component: {fileID: 5763463306427847866}
-  - component: {fileID: 5042539123001357360}
   - component: {fileID: 5430836455328030628}
   - component: {fileID: 5763463306427847867}
   m_Layer: 0
@@ -61,20 +60,6 @@ MonoBehaviour:
   StatusButtonCross: {fileID: 1687468306381516050, guid: 115a9b6176ed64aa2b973454a8a300ef, type: 3}
   Exclamation: {fileID: 3736141972116455676, guid: 3f4809334c0f14a1abbdaa3af7d5fe30, type: 3}
   isTransitioningDoor: 0
---- !u!114 &5042539123001357360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5763463306427847863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fd5206e55dfc41dd80319ef3e93670c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxEnergy: 3
-  energy: 0
 --- !u!114 &5430836455328030628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToFade: 2
+  stagesToIncrement: {fileID: 4900000, guid: accff7744bd854b7f8e48edd6196af4a, type: 3}
 --- !u!114 &5763463306427847867
 MonoBehaviour:
   m_ObjectHideFlags: 0

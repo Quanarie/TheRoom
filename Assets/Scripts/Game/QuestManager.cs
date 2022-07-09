@@ -15,6 +15,10 @@ public class QuestManager : MonoBehaviour, ISaveable
         Quests[index].SetCurrentStage(stage);
         OnQuestStageChanged?.Invoke();
     }
+    public void SetStageQuite(int index, int stage)
+    {
+        Quests[index].SetCurrentStage(stage);
+    }
     public void ChangeStage(int index, int delta)
     {
         Quests[index].ChangeCurrentStage(delta);
@@ -22,6 +26,7 @@ public class QuestManager : MonoBehaviour, ISaveable
     }
 
     private const int questsQuantity = 50;
+    private bool wasLoaded = false;
 
     private void Awake()
     {
@@ -34,10 +39,13 @@ public class QuestManager : MonoBehaviour, ISaveable
             Instance = this;
         }
 
-        Quests = new Quest[questsQuantity];
-        for (int i = 0; i < questsQuantity; i++)
+        if (!wasLoaded)
         {
-            Quests[i] = new Quest(i);
+            Quests = new Quest[questsQuantity];
+            for (int i = 0; i < questsQuantity; i++)
+            {
+                Quests[i] = new Quest(i);
+            }
         }
     }
 
@@ -49,5 +57,6 @@ public class QuestManager : MonoBehaviour, ISaveable
     public void RestoreState(object state)
     {
         Quests = (Quest[])state;
+        wasLoaded = true;
     }
 }

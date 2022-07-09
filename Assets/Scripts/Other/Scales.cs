@@ -61,7 +61,7 @@ public class Scales : MonoBehaviour, ISaveable
             PleasureScale,
             AnxietyScale,
             RealisticScale
-    };
+        };
         return scales;
     }
 

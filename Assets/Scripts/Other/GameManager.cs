@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private float timeToFade = 2f;
+    [SerializeField] private TextAsset stagesToIncrement;
 
     private bool isTransitioning = false;
     private int levelOnLoaded = 1;
@@ -35,6 +37,20 @@ public class GameManager : MonoBehaviour
     {
         if (isTransitioning) return;
         isTransitioning = true;
+
+        List<string> text = stagesToIncrement.text.Split("\n").ToList();
+        for (int i = 0; i < text.Count; i++)
+        {
+            if (text[i] == "") continue;
+
+            string[] splitted = text[i].Split(";");
+            int id = int.Parse(splitted[0]);
+            int stage = int.Parse(splitted[1]);
+            if (QuestManager.Instance.GetStage(id) == stage)
+            {
+                QuestManager.Instance.SetStageQuite(id, stage + 1);
+            }
+        }
 
         DialogueManager.Instance.DialogueText.GetComponent<TextMeshProUGUI>().text = "Я втомився. Здається, я зробив все, що міг. Я заслужив на відпочинок.";
 

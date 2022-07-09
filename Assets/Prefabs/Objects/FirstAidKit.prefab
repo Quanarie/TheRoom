@@ -152,3 +152,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   story: {fileID: 4900000, guid: 61885150daf9f4954bb30e96af6524d7, type: 3}
+  distance: 1

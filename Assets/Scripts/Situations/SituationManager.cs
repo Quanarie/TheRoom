@@ -45,7 +45,7 @@ public class SituationManager : MonoBehaviour, ISaveable
                 Destroy(dict[s.name]);
             }
 
-            if (scales && distance && quests && !s.isDone)
+            if (scales && distance && quests && !s.isDone && !TryGetComponent(out Dialogue _))
             {
                 Dialogue dialogue = gameObject.AddComponent<Dialogue>();
                 dialogue.story = story;
@@ -54,7 +54,8 @@ public class SituationManager : MonoBehaviour, ISaveable
 
                 if (s.isOneTime == true)
                 {
-                    s.isDone = true;
+                    dialogue.OnEndOfDialogue += () => s.isDone = true;
+                    dialogue.OnEndOfDialogue += () => Destroy(dialogue);
                 }
             }
         }
@@ -68,5 +69,6 @@ public class SituationManager : MonoBehaviour, ISaveable
     public void RestoreState(object state)
     {
         Situations = (Situation[])state;
+
     }
 }

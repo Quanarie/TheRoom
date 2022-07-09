@@ -20,7 +20,7 @@ public class MainMenu : MonoBehaviour
 
     public void OnStartButtonClicked()
     {
-        SceneManager.LoadScene(PlayerPrefs.GetInt(PlayerPrefs.GetString("currentLoad"), 1));
+        SceneManager.LoadScene(PlayerPrefs.GetInt(PlayerPrefs.GetString("currentLoad", "AutoLoad.txt"), 1));
     }
 
     public void OnNewGameButtonClicked()

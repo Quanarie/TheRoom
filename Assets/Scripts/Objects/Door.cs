@@ -4,12 +4,18 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     [SerializeField] private int sceneToLoad;
+    [SerializeField] private float distance;
 
     private const float timeToFade = 1f;
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void Start()
     {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed())
+        InputManager.Instance.OnInteractionPressed += OnInteraction;
+    }
+
+    private void OnInteraction()
+    {
+        if (Vector3.Distance(Globals.Instance.Player.transform.position, transform.position) <= distance)
         {
             Globals.Instance.GameManager.StopAllCoroutines();
             StartCoroutine(fadeOut());
@@ -26,5 +32,10 @@ public class Door : MonoBehaviour
         }
         Globals.Instance.isTransitioningDoor = false;
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneToLoad);
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.OnInteractionPressed -= OnInteraction;
     }
 }

@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class Chair : DialogueTrigger
 {
-    protected virtual void OnTriggerStay2D(Collider2D collision)
+    protected override void Start()
     {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
+        base.Start();
+        QuestManager.Instance.SetStage(1, PlayerPrefs.GetInt("currentLevel"));
+    }
+
+    protected override void OnInteraction()
+    {
+        if (Vector3.Distance(Globals.Instance.Player.transform.position, transform.position) <= distance && !DialogueManager.Instance.IsDialogueOn())
         {
-            if (GetComponent<QuestIdentifier>().chooseDialogue().Split(";")[0] == "quest")
-            {
-                dialogue.startDialogue();
-            }
-            else
-            {
-                dialogue.startDialogue("quest;1;" + PlayerPrefs.GetInt("currentLevel").ToString());
-            }
+            dialogue.startDialogue();
+            InputManager.Instance.GetInteractionPressed(); // so it doesnt skip the first line
         }
     }
 }

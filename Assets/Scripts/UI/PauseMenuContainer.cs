@@ -58,5 +58,8 @@ public class PauseMenuContainer : MonoBehaviour
         PlayerPrefs.SetInt(button.name + ".level", PlayerPrefs.GetInt("currentLevel"));
 
         SavingSystem.Instance.Save(button.name + ".txt");
+
+        pauseMenu.SetActive(true);
+        saveMenu.SetActive(false);
     }
 }

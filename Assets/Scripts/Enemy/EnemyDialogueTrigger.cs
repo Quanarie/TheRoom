@@ -1,4 +1,4 @@
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +7,7 @@ public class EnemyDialogueTrigger : DialogueTrigger
 {
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
+        if (collision.CompareTag("Player") && Input.GetKeyDown(KeyCode.Space) && !DialogueManager.Instance.IsDialogueOn())
         {
             subscribe();
             dialogue.startDialogue();

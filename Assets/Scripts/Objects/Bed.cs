@@ -7,9 +7,16 @@ using System.Collections.Generic;
 
 public class Bed : MonoBehaviour
 {
-    private void OnTriggerStay2D(Collider2D collision)
+    [SerializeField] private float distance;
+
+    private void Start()
     {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
+        InputManager.Instance.OnInteractionPressed += OnInteraction;
+    }
+
+    private void OnInteraction()
+    {
+        if (Vector3.Distance(Globals.Instance.Player.transform.position, transform.position) <= distance && !DialogueManager.Instance.IsDialogueOn())
         {
             show();
         }
@@ -69,5 +76,10 @@ public class Bed : MonoBehaviour
             }
         }
         return true;
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.OnInteractionPressed -= OnInteraction;
     }
 }

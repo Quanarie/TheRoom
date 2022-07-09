@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class DialogueTriggerOnInteract : DialogueTrigger
 {
-    protected virtual void OnTriggerStay2D(Collider2D collision)
+    protected override void OnInteraction()
     {
-        if (collision.CompareTag("Player") && InputManager.Instance.GetInteractionPressed() && !DialogueManager.Instance.IsDialogueOn())
+        if (Vector3.Distance(Globals.Instance.Player.transform.position, transform.position) <= distance && !DialogueManager.Instance.IsDialogueOn())
         {
             dialogue.startDialogue();
+            InputManager.Instance.GetInteractionPressed(); // so it doesnt skip the first line
         }
     }
 }   

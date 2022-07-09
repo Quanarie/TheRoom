@@ -1,15 +1,24 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Table : MonoBehaviour
 {
-    private void OnTriggerStay2D(Collider2D collision)
+    [SerializeField] private float distance;
+
+    private void Start()
     {
-        if (InputManager.Instance.GetInteractionPressed())
+        InputManager.Instance.OnInteractionPressed += OnInteraction;
+    }
+
+    private void OnInteraction()
+    {
+        if (Vector3.Distance(Globals.Instance.Player.transform.position, transform.position) <= distance && !Diary.Instance.IsDiaryOnScreen())
         {
-            if (collision.CompareTag("Player") && !Diary.Instance.IsDiaryOnScreen())
-            {
-                Diary.Instance.Show();
-            }
+            Diary.Instance.Show();
         }
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.OnInteractionPressed -= OnInteraction;
     }
 }

@@ -26,8 +26,6 @@ public class QuestIdentifier : MonoBehaviour
         return "standard;normal";
     }
 
-    //%quest;5|(6&7)|(8&9&10)...;10|(20&30)|(40&50&60)...
-
     private bool checkQuests(string ids, string stages)
     {
         string[] eachId = ids.Split(andSign);
@@ -47,13 +45,4 @@ public class QuestIdentifier : MonoBehaviour
             {
                 return "quest;" + id[i] + ";" + stage[i];
             }*/
-
-    public bool isCompletedAll()
-    {
-        for (int i = 0; i < id.Length; i++)
-        {
-            
-        }
-        return true;
-    }
 }

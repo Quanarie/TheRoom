@@ -33,6 +33,8 @@ public class Dialogue : MonoBehaviour
     private const string pleasure = "Pleasure";
     private const string anxiety = "Anxiety";
     private const string realistic = "Realistic";
+    private const string orSign = "|";
+    private const string andSign = "&";
 
     public void Start()
     {
@@ -91,7 +93,7 @@ public class Dialogue : MonoBehaviour
 
     private void Update()
     {
-        if (DialogueManager.Instance.IsChoiceActive() || index >= text.Count) return;
+        if (DialogueManager.Instance.IsChoiceActive() || index >= text.Count || !isDialogueOn) return;
 
         if (!isLineEmpty(index) && isDialogueOn && endsOfChoice.Count == 0)
         {
@@ -405,15 +407,13 @@ public class Dialogue : MonoBehaviour
 
     public void startDialogue()
     {
-        isDialogueOn = true;
-        index = 0;
-        if (TryGetComponent(out QuestIdentifier identifier))
+        int temp = chooseDialogue();
+        if (temp != -1)
         {
-            reactToDialogueStart(identifier.chooseDialogue());
-        }
-        else
-        {
-            reactToDialogueStart("standard;normal");
+            isDialogueOn = true;
+            DialogueManager.Instance.Show();
+            index = temp + 1;
+            readLine();
         }
     }
 
@@ -445,6 +445,79 @@ public class Dialogue : MonoBehaviour
                 Debug.LogWarning("Did not find a dialogue for " + gameObject.name);
             }
         }
+    }
+
+    public int isThereAQuestDialogue()
+    {
+        for (int i = 0; i < text.Count; i++)
+        {
+            if (currentLine(i).Contains("%"))
+            {
+                string[] splitted = currentLine(i).Split(";");
+                if (splitted[0] == "%quest")
+                {
+                    string[] quests = splitted[1].Split(orSign);
+                    string[] stages = splitted[2].Split(orSign);
+                    for (int j = 0; j < quests.Length; j++)
+                    {
+                        if (checkQuests(quests[j].Replace("(", "").Replace(")", ""), stages[j].Replace("(", "").Replace(")", "")))
+                        {
+                            return int.Parse(quests[j]);
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int chooseDialogue()
+    {
+        int standartIndex = -1;
+        for (int i = 0; i < text.Count; i++)
+        {
+            if (currentLine(i).Contains("%"))
+            {
+                string[] splitted = currentLine(i).Split(";");
+                if (splitted[0] == "%quest")
+                {
+                    string[] quests = splitted[1].Split(orSign);
+                    string[] stages = splitted[2].Split(orSign);
+                    for (int j = 0; j < quests.Length; j++)
+                    {
+                        if (checkQuests(quests[j].Replace("(", "").Replace(")", ""), stages[j].Replace("(", "").Replace(")", "")))
+                        {
+                            return i;
+                        }
+                    }
+                }
+                else
+                {
+                    standartIndex = i;
+                }
+            }
+        }
+        if (standartIndex != -1)
+        {
+            return standartIndex;
+        }
+
+        return -1;
+    }
+
+    private bool checkQuests(string ids, string stages)
+    {
+        string[] eachId = ids.Split(andSign);
+        string[] eachStage = stages.Split(andSign);
+
+        for (int i = 0; i < eachId.Length; i++)
+        {
+            if (QuestManager.Instance.GetStage(int.Parse(eachId[i])) != int.Parse(eachStage[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private int findTheEndDialogue(int ind)

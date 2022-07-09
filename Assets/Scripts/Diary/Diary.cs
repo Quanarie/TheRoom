@@ -54,9 +54,7 @@ public class Diary : MonoBehaviour, ISaveable
             {
                 Show();
             }
-
         }
-        else if (IsDiaryOnScreen() && InputManager.Instance.GetInteractionPressed()) Hide();
     }
 
     public void AddAchievement(string newLine)

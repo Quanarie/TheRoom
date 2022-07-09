@@ -121,6 +121,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3073255362034926821}
     m_Modifications:
+    - target: {fileID: 4081811235205764429, guid: 6c6c24c0bca444c82923b7a5f224ed94, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5076923320963814939, guid: 6c6c24c0bca444c82923b7a5f224ed94, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -271,9 +275,9 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5076923322497235006, guid: 6c6c24c0bca444c82923b7a5f224ed94, type: 3}
   m_PrefabInstance: {fileID: 8215855071696275202}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &8215855072399327255 stripped
+--- !u!225 &5377602629997105743 stripped
 CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 788023061, guid: 6c6c24c0bca444c82923b7a5f224ed94, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4081811235205764429, guid: 6c6c24c0bca444c82923b7a5f224ed94, type: 3}
   m_PrefabInstance: {fileID: 8215855071696275202}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8902386262120142833
@@ -334,7 +338,7 @@ PrefabInstance:
     - target: {fileID: 5763463306427847866, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
       propertyPath: Fader
       value: 
-      objectReference: {fileID: 8215855072399327255}
+      objectReference: {fileID: 5377602629997105743}
     - target: {fileID: 5763463306427847866, guid: e4eb8991233ba4c1b8967886a6eda003, type: 3}
       propertyPath: Canvas
       value: 

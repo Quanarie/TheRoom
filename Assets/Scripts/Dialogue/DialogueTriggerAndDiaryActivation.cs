@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueTriggerAndDiaryActivation : DialogueTriggerOnInteract
@@ -10,22 +8,23 @@ public class DialogueTriggerAndDiaryActivation : DialogueTriggerOnInteract
         dialogue.OnEndOfDialogue += Diary.Instance.Show;
     }
 
-    protected override void OnTriggerStay2D(Collider2D collision)
+    protected override void OnInteraction()
     {
-        if (InputManager.Instance.GetInteractionPressed())
+        if (!DialogueManager.Instance.IsDialogueOn() && Vector3.Distance(Globals.Instance.Player.transform.position, transform.position) <= distance)
         {
-            if (identifier.chooseDialogue().Split(";")[0] == "standard")
+            if (dialogue.isThereAQuestDialogue() != -1)
             {
-                if (collision.CompareTag("Player") && !Diary.Instance.IsDiaryOnScreen())
+                if (!DialogueManager.Instance.IsDialogueOn())
                 {
-                    Diary.Instance.Show();
+                    dialogue.startDialogue();
+                    InputManager.Instance.GetInteractionPressed();
                 }
             }
             else
             {
-                if (collision.CompareTag("Player") && !DialogueManager.Instance.IsDialogueOn())
+                if (!Diary.Instance.IsDiaryOnScreen())
                 {
-                    dialogue.startDialogue();
+                    Diary.Instance.Show();
                 }
             }
         }

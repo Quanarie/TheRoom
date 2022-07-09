@@ -3,28 +3,25 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private TextAsset story;
+    [SerializeField] protected float distance;
 
     protected Dialogue dialogue;
 
-    protected QuestIdentifier identifier;
     protected GameObject exclamationPoint;
 
     protected virtual void Start()
     {
         dialogue = gameObject.AddComponent<Dialogue>();
         dialogue.story = story;
-        TryGetComponent(out identifier);
+        dialogue.Start();
+        QuestManager.Instance.OnQuestStageChanged += tryShowExclamation;
+        tryShowExclamation();
+        InputManager.Instance.OnInteractionPressed += OnInteraction;
     }
 
-    private void Update()
+    protected virtual void tryShowExclamation()
     {
-        if (identifier != null)
-            tryShowExclamation();
-    }
-
-    private void tryShowExclamation()
-    {
-        if (identifier.chooseDialogue().Split(";")[0] == "quest")
+        if (dialogue.isThereAQuestDialogue() != -1)
         {
             if (exclamationPoint == null)
             {
@@ -38,6 +35,13 @@ public class DialogueTrigger : MonoBehaviour
         }
     }
 
+    protected virtual void OnInteraction() { }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.OnInteractionPressed -= OnInteraction;
+        QuestManager.Instance.OnQuestStageChanged -= tryShowExclamation;
+    }
 
     public Dialogue GetDialogue() => dialogue;
 }

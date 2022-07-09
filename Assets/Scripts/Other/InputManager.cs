@@ -4,7 +4,10 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance { get; private set; }
-    
+
+    public delegate void InteractionPressed();
+    public event InteractionPressed OnInteractionPressed;
+
     private void Awake()
     {
         if (Instance && Instance != this)
@@ -38,6 +41,7 @@ public class InputManager : MonoBehaviour
         if (context.performed)
         {
             isInteractionPressed = true;
+            OnInteractionPressed?.Invoke();
         }
         else if (context.canceled)
         {

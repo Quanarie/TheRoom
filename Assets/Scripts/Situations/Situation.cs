@@ -3,15 +3,15 @@ using UnityEngine;
 [System.Serializable]
 public class Situation
 {
-    public string name;
-    public int lvl;
+    [SerializeField] public string name;
+    [SerializeField] public int lvl;
     [SerializeField] private int pleasureNeeded;
     [SerializeField] private int anxietyNeeded;
     [SerializeField] private int realisticNeeded;
-    public bool isOneTime;
+    [SerializeField] public bool isOneTime;
     [SerializeField] private int[] quests;
     [SerializeField] private TwoDArray[] stages;
-    public SerializableVector3 place;
+    [SerializeField] public SerializableVector3 place;
     [SerializeField] private float distanceToThis;
 
     [HideInInspector] public bool isDone = false;
